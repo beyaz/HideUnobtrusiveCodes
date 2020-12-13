@@ -1,5 +1,7 @@
-﻿using HideUnobtrusiveCodes.Dataflow;
+﻿using System.Collections.Generic;
+using HideUnobtrusiveCodes.Dataflow;
 using HideUnobtrusiveCodes.Tagging;
+using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
 using static HideUnobtrusiveCodes.Common.Mixin;
 using static HideUnobtrusiveCodes.Processors.Keys;
@@ -48,6 +50,42 @@ namespace HideUnobtrusiveCodes.Processors
 
             // focus to next not processed position
             scope.Update(CurrentLineIndex, i + 1);
+        }
+        #endregion
+
+        #region Methods
+        /// <summary>
+        ///     Hides the lines.
+        /// </summary>
+        static SnapshotSpan HideLines(IReadOnlyList<ITextSnapshotLine> snapshotLines, int startLineIndex, int endLineIndex)
+        {
+            var length = snapshotLines.Count;
+
+            var startLine = snapshotLines[startLineIndex];
+            var endLine   = snapshotLines[endLineIndex];
+
+            if (startLineIndex > 0)
+            {
+                var start = snapshotLines[startLineIndex - 1].End;
+                var end   = snapshotLines[endLineIndex].End;
+
+                return new SnapshotSpan(start, end);
+            }
+
+            if (startLineIndex + 1 < length)
+            {
+                var start = startLine.Start;
+                var end   = snapshotLines[endLineIndex].End;
+
+                return new SnapshotSpan(start, end);
+            }
+
+            {
+                var start = startLine.Start;
+                var end   = snapshotLines[endLineIndex].End;
+
+                return new SnapshotSpan(start, end);
+            }
         }
         #endregion
     }

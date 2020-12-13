@@ -2,7 +2,7 @@ using System.IO;
 using YamlDotNet.Serialization;
 using static HideUnobtrusiveCodes.Common.FilePathHelper;
 
-namespace HideUnobtrusiveCodes.Common
+namespace HideUnobtrusiveCodes.Options
 {
     /// <summary>
     ///     The options reader

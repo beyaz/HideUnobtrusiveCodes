@@ -1,4 +1,5 @@
-﻿using HideUnobtrusiveCodes.Dataflow;
+﻿using System;
+using HideUnobtrusiveCodes.Dataflow;
 using HideUnobtrusiveCodes.Tagging;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
@@ -45,6 +46,24 @@ namespace HideUnobtrusiveCodes.Processors
                     scope.Update(CurrentLineIndex, currentLineIndex + 1);
                 }
             }
+        }
+        #endregion
+
+        #region Methods
+        /// <summary>
+        ///     Lines the contains.
+        /// </summary>
+        static bool LineContains(Scope scope, int lineIndex, string value)
+        {
+            var getTextAtLine = scope.Get(GetTextAtLine);
+
+            var line = getTextAtLine(lineIndex);
+            if (line == null)
+            {
+                return false;
+            }
+
+            return line.IndexOf(value, StringComparison.OrdinalIgnoreCase) >= 0;
         }
         #endregion
     }

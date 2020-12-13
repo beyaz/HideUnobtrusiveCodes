@@ -65,5 +65,38 @@ namespace HideUnobtrusiveCodes.Processors
             variableNames.Clear();
         }
         #endregion
+
+        #region Methods
+        /// <summary>
+        ///     Determines whether [is scope assignment] [the specified scope].
+        /// </summary>
+        static bool IsScopeAssignment(Scope scope, int lineIndex)
+        {
+            var getTextAtline                = scope.Get(GetTextAtLine);
+            var scopeAssignmentVariableNames = scope.Get(ScopeAssignmentVariableNames);
+
+            var isStartsWithVar = LineStartsWith(getTextAtline, lineIndex, "var ");
+            if (!isStartsWithVar)
+            {
+                return false;
+            }
+
+            var isScopeAccess = LineContains(getTextAtline, lineIndex, "= scope.Get(");
+            if (!isScopeAccess)
+            {
+                return false;
+            }
+
+            var line = getTextAtline(lineIndex).Trim();
+
+            line = line.RemoveFromStart("var ");
+
+            var variableName = line.Substring(0, line.IndexOf("=")).Trim();
+
+            scopeAssignmentVariableNames.Add(variableName);
+
+            return true;
+        }
+        #endregion
     }
 }

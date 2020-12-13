@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using HideUnobtrusiveCodes.Dataflow;
 using HideUnobtrusiveCodes.Processors;
-using HideUnobtrusiveCodes.Tagging;
 using Microsoft.VisualStudio.Text;
-using static HideUnobtrusiveCodes.Common.MyUtil;
 
 namespace HideUnobtrusiveCodes.Common
 {
@@ -39,125 +36,6 @@ namespace HideUnobtrusiveCodes.Common
 
                 return null;
             };
-        }
-
-        /// <summary>
-        ///     Determines whether the specified a has intersection.
-        /// </summary>
-        public static bool HasIntersection(NormalizedSnapshotSpanCollection a, NormalizedSnapshotSpanCollection b)
-        {
-            try
-            {
-                return a.IntersectsWith(b);
-            }
-            catch (Exception e)
-            {
-                Trace(e.ToString());
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        ///     Hides the lines.
-        /// </summary>
-        public static SnapshotSpan HideLines(IReadOnlyList<ITextSnapshotLine> snapshotLines, int startLineIndex, int endLineIndex)
-        {
-            var length = snapshotLines.Count;
-
-            var startLine = snapshotLines[startLineIndex];
-            var endLine   = snapshotLines[endLineIndex];
-
-            if (startLineIndex > 0)
-            {
-                var start = snapshotLines[startLineIndex - 1].End;
-                var end   = snapshotLines[endLineIndex].End;
-
-                return new SnapshotSpan(start, end);
-            }
-
-            if (startLineIndex + 1 < length)
-            {
-                var start = startLine.Start;
-                var end   = snapshotLines[endLineIndex].End;
-
-                return new SnapshotSpan(start, end);
-            }
-
-            {
-                var start = startLine.Start;
-                var end   = snapshotLines[endLineIndex].End;
-
-                return new SnapshotSpan(start, end);
-            }
-        }
-
-        /// <summary>
-        ///     Determines whether [is intersect with disabled spans] [the specified scope].
-        /// </summary>
-        public static bool IsIntersectWithDisabledSpans(AdornmentTaggerScope scope, SnapshotSpan span)
-        {
-            if (scope.DisabledSnapshotSpans.Any(x => IntersectsWith(x, span)))
-            {
-                return true;
-            }
-
-            if (scope.EditedSpans != null)
-            {
-                if (scope.EditedSpans.Any(x => IntersectsWith(x, span)))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        ///     Determines whether [is scope assignment] [the specified scope].
-        /// </summary>
-        public static bool IsScopeAssignment(Scope scope, int lineIndex)
-        {
-            var getTextAtline                = scope.Get(Keys.GetTextAtLine);
-            var scopeAssignmentVariableNames = scope.Get(Keys.ScopeAssignmentVariableNames);
-
-            var isStartsWithVar = LineStartsWith(getTextAtline, lineIndex, "var ");
-            if (!isStartsWithVar)
-            {
-                return false;
-            }
-
-            var isScopeAccess = LineContains(getTextAtline, lineIndex, "= scope.Get(");
-            if (!isScopeAccess)
-            {
-                return false;
-            }
-
-            var line = getTextAtline(lineIndex).Trim();
-
-            line = line.RemoveFromStart("var ");
-
-            var variableName = line.Substring(0, line.IndexOf("=")).Trim();
-
-            scopeAssignmentVariableNames.Add(variableName);
-
-            return true;
-        }
-
-        /// <summary>
-        ///     Lines the contains.
-        /// </summary>
-        public static bool LineContains(Scope scope, int lineIndex, string value)
-        {
-            var getTextAtLine = scope.Get(Keys.GetTextAtLine);
-
-            var line = getTextAtLine(lineIndex);
-            if (line == null)
-            {
-                return false;
-            }
-
-            return line.IndexOf(value, StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         /// <summary>
@@ -256,42 +134,6 @@ namespace HideUnobtrusiveCodes.Common
             }
 
             return start;
-        }
-        #endregion
-
-        #region Methods
-        /// <summary>
-        ///     Intersectses the with.
-        /// </summary>
-        static bool IntersectsWith(SnapshotSpan a, SnapshotSpan b)
-        {
-            try
-            {
-                a = ToLine(a);
-                b = ToLine(b);
-
-                return a.IntersectsWith(b);
-            }
-            catch (Exception e)
-            {
-                Trace(e.ToString());
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        ///     To the line.
-        /// </summary>
-        static SnapshotSpan ToLine(SnapshotSpan snapshotSpan)
-        {
-            var textSnapshotLine = snapshotSpan.Snapshot.GetLineFromPosition(snapshotSpan.Start.Position);
-
-            var startPosition = textSnapshotLine.Start.Position;
-
-            var endPosition = snapshotSpan.Snapshot.GetLineFromPosition(snapshotSpan.End.Position).End;
-
-            return new SnapshotSpan(snapshotSpan.Snapshot, startPosition, endPosition - startPosition);
         }
         #endregion
     }

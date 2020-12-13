@@ -1,4 +1,4 @@
-namespace HideUnobtrusiveCodes.Common
+namespace HideUnobtrusiveCodes.Options
 {
     /// <summary>
     ///     The options model

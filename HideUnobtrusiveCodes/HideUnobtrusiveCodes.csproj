@@ -83,8 +83,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Tagging\Mixin.cs" />
     <Compile Include="Processors\Keys.cs" />
-    <Compile Include="Common\OldNewPair.cs" />
+    <Compile Include="Options\OldNewPair.cs" />
     <Compile Include="Dataflow\DataKey.cs" />
     <Compile Include="Processors\BOAResponseCheckCollapsing\BOAResponseCheckProcessor.cs" />
     <Compile Include="Processors\BOAResponseCheckCollapsing\VariableAssignmentLine.cs" />
@@ -95,8 +96,8 @@
     <Compile Include="Tagging\GlobalScopeAccess.cs" />
     <Compile Include="Common\Mixin.cs" />
     <Compile Include="Common\MyUtil.cs" />
-    <Compile Include="Common\OptionsModel.cs" />
-    <Compile Include="Common\OptionsReader.cs" />
+    <Compile Include="Options\OptionsModel.cs" />
+    <Compile Include="Options\OptionsReader.cs" />
     <Compile Include="Tagging\Adornment.cs" />
     <Compile Include="Tagging\AdornmentTaggerScope.cs" />
     <Compile Include="Processors\CommentProcessor.cs" />

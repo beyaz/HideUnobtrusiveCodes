@@ -1,4 +1,4 @@
-﻿using HideUnobtrusiveCodes.Common;
+﻿using HideUnobtrusiveCodes.Options;
 
 namespace HideUnobtrusiveCodes.Tagging
 {

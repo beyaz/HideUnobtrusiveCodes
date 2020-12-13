@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
-using HideUnobtrusiveCodes.Common;
 using HideUnobtrusiveCodes.Dataflow;
+using HideUnobtrusiveCodes.Options;
 using HideUnobtrusiveCodes.Tagging;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;

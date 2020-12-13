@@ -8,7 +8,6 @@ using HideUnobtrusiveCodes.Processors;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
-using static HideUnobtrusiveCodes.Common.Mixin;
 using AdornmentCache = System.Collections.Generic.Dictionary<Microsoft.VisualStudio.Text.SnapshotSpan, HideUnobtrusiveCodes.Tagging.Adornment>;
 
 namespace HideUnobtrusiveCodes.Tagging
@@ -113,7 +112,7 @@ namespace HideUnobtrusiveCodes.Tagging
                 // Translate each adornment to the snapshot that the tagger was asked about.
                 var span = tagSpan.Span.TranslateTo(requestedSnapshot, SpanTrackingMode.EdgeExclusive);
 
-                if (IsIntersectWithDisabledSpans(scope, span))
+                if (Mixin.IsIntersectWithDisabledSpans(scope, span))
                 {
                     continue;
                 }
@@ -176,9 +175,9 @@ namespace HideUnobtrusiveCodes.Tagging
         /// <summary>
         ///     Translates the adornment cache.
         /// </summary>
-        static AdornmentCache TranslateAdornmentCache(ITextSnapshot targetSnapshot, Dictionary<SnapshotSpan, Adornment> adornmentCache)
+        static AdornmentCache TranslateAdornmentCache(ITextSnapshot targetSnapshot, AdornmentCache adornmentCache)
         {
-            var translatedAdornmentCache = new Dictionary<SnapshotSpan, Adornment>();
+            var translatedAdornmentCache = new AdornmentCache();
 
             foreach (var pair in adornmentCache)
             {
@@ -258,7 +257,7 @@ namespace HideUnobtrusiveCodes.Tagging
             var toRemove = new HashSet<SnapshotSpan>();
             foreach (var pair in adornmentCache)
             {
-                if (HasIntersection(spans, new NormalizedSnapshotSpanCollection(pair.Key.TranslateTo(snapshot, SpanTrackingMode.EdgeExclusive))))
+                if (Mixin.HasIntersection(spans, new NormalizedSnapshotSpanCollection(pair.Key.TranslateTo(snapshot, SpanTrackingMode.EdgeExclusive))))
                 {
                     toRemove.Add(pair.Key);
                 }
