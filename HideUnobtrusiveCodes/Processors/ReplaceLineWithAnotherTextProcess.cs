@@ -1,5 +1,4 @@
-﻿using HideUnobtrusiveCodes.Common;
-using HideUnobtrusiveCodes.Dataflow;
+﻿using HideUnobtrusiveCodes.Dataflow;
 using HideUnobtrusiveCodes.Tagging;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
@@ -8,9 +7,15 @@ using static HideUnobtrusiveCodes.Processors.Keys;
 
 namespace HideUnobtrusiveCodes.Processors
 {
+    /// <summary>
+    ///     The replace line with another text process
+    /// </summary>
     class ReplaceLineWithAnotherTextProcess
     {
         #region Public Methods
+        /// <summary>
+        ///     Processes the replace line with another text.
+        /// </summary>
         public static void ProcessReplaceLineWithAnotherText(Scope scope)
         {
             var getTextAtLine     = scope.Get(GetTextAtLine);

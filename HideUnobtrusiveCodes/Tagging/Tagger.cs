@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using HideUnobtrusiveCodes.Common;
 using HideUnobtrusiveCodes.Dataflow;
 using HideUnobtrusiveCodes.Processors;
 using HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing;
@@ -12,13 +11,22 @@ using static HideUnobtrusiveCodes.Common.Mixin;
 
 namespace HideUnobtrusiveCodes.Tagging
 {
+    /// <summary>
+    ///     The tagger
+    /// </summary>
     sealed class Tagger : ITagger<TagData>
     {
         #region Fields
+        /// <summary>
+        ///     The scope
+        /// </summary>
         readonly AdornmentTaggerScope scope;
         #endregion
 
         #region Constructors
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="Tagger" /> class.
+        /// </summary>
         public Tagger(ITextBuffer buffer)
         {
             buffer.Changed += (sender, args) => HandleBufferChanged(args);
@@ -28,6 +36,9 @@ namespace HideUnobtrusiveCodes.Tagging
         #endregion
 
         #region Methods
+        /// <summary>
+        ///     Gets the intersecting lines.
+        /// </summary>
         static IEnumerable<ITextSnapshotLine> GetIntersectingLines(NormalizedSnapshotSpanCollection spans)
         {
             if (spans.Count == 0)
@@ -91,11 +102,17 @@ namespace HideUnobtrusiveCodes.Tagging
         #endregion
 
         #region ITagger implementation
+        /// <summary>
+        ///     Gets all the tags that intersect the specified spans.
+        /// </summary>
         public IEnumerable<ITagSpan<TagData>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
             return GetTagList(spans);
         }
 
+        /// <summary>
+        ///     The proces list
+        /// </summary>
         static readonly Action<Scope>[] procesList =
         {
             ScopeToVariableAssignmentProcessor.ProcessScopeToVariableAssignments,
@@ -106,6 +123,9 @@ namespace HideUnobtrusiveCodes.Tagging
             BOAResponseCheckProcessor.Process
         };
 
+        /// <summary>
+        ///     Gets the tag list.
+        /// </summary>
         IReadOnlyList<ITagSpan<TagData>> GetTagList(NormalizedSnapshotSpanCollection spans)
         {
             var returnList = new List<ITagSpan<TagData>>();
@@ -136,6 +156,9 @@ namespace HideUnobtrusiveCodes.Tagging
             return returnList;
         }
 
+        /// <summary>
+        ///     Parses the specified scope.
+        /// </summary>
         static void Parse(Scope scope)
         {
             var textSnapshotLines = scope.Get(Keys.TextSnapshotLines);
@@ -170,6 +193,9 @@ namespace HideUnobtrusiveCodes.Tagging
             }
         }
 
+        /// <summary>
+        ///     Occurs when tags are added to or removed from the provider.
+        /// </summary>
         public event EventHandler<SnapshotSpanEventArgs> TagsChanged;
         #endregion
     }

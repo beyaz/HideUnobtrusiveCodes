@@ -9,6 +9,9 @@ namespace HideUnobtrusiveCodes.Tagging
     internal class TagData : ITag
     {
         #region Public Properties
+        /// <summary>
+        ///     Gets or sets a value indicating whether [show comment icon].
+        /// </summary>
         public bool ShowCommentIcon { get; set; }
 
         /// <summary>

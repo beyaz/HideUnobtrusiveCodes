@@ -1,5 +1,8 @@
 namespace HideUnobtrusiveCodes.Common
 {
+    /// <summary>
+    ///     The old new pair
+    /// </summary>
     public class OldNewPair
     {
         #region Public Properties

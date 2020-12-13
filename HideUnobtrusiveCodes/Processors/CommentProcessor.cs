@@ -1,5 +1,4 @@
-﻿using HideUnobtrusiveCodes.Common;
-using HideUnobtrusiveCodes.Dataflow;
+﻿using HideUnobtrusiveCodes.Dataflow;
 using HideUnobtrusiveCodes.Tagging;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;

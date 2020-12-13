@@ -9,12 +9,18 @@ using Microsoft.VisualStudio.Utilities;
 
 namespace HideUnobtrusiveCodes.Tagging
 {
+    /// <summary>
+    ///     The adornment tagger provider
+    /// </summary>
     [Export(typeof(IViewTaggerProvider))]
     [ContentType("CSharp")]
     [TagType(typeof(IntraTextAdornmentTag))]
     internal sealed class AdornmentTaggerProvider : IViewTaggerProvider
     {
         #region Public Methods
+        /// <summary>
+        ///     Creates a tag provider for the specified view and buffer.
+        /// </summary>
         public ITagger<T> CreateTagger<T>(ITextView textView, ITextBuffer buffer) where T : ITag
         {
             if (textView == null)
@@ -56,8 +62,14 @@ namespace HideUnobtrusiveCodes.Tagging
         #endregion
 
         #pragma warning disable 649 // "field never assigned to" -- field is set by MEF.
+        /// <summary>
+        ///     The buffer tag aggregator factory service
+        /// </summary>
         [Import] internal IBufferTagAggregatorFactoryService BufferTagAggregatorFactoryService;
 
+        /// <summary>
+        ///     The format map service
+        /// </summary>
         [Import] internal IEditorFormatMapService FormatMapService; // MEF
 
         #pragma warning restore 649

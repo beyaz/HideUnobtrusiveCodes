@@ -5,9 +5,15 @@ using Microsoft.VisualStudio.Text.Classification;
 
 namespace HideUnobtrusiveCodes.Common
 {
+    /// <summary>
+    ///     My utility
+    /// </summary>
     class MyUtil
     {
         #region Public Methods
+        /// <summary>
+        ///     Appends to file.
+        /// </summary>
         public static void AppendToFile(string filePath, string message)
         {
             try
@@ -26,6 +32,9 @@ namespace HideUnobtrusiveCodes.Common
             }
         }
 
+        /// <summary>
+        ///     Applies the style.
+        /// </summary>
         public static void ApplyStyle(IEditorFormatMap editorFormatMap, TextBox textBlock)
         {
             var typeface = editorFormatMap.GetTypeface();
@@ -49,6 +58,9 @@ namespace HideUnobtrusiveCodes.Common
             return textblock => ApplyStyle(editorFormatMap, textblock);
         }
 
+        /// <summary>
+        ///     Traces the specified message.
+        /// </summary>
         public static void Trace(string message)
         {
             AppendToFile("d:\\trace.txt", message);

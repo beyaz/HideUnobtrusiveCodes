@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
-using HideUnobtrusiveCodes.Common;
 using HideUnobtrusiveCodes.Dataflow;
 using HideUnobtrusiveCodes.Processors;
 using Microsoft.VisualStudio.Text;
@@ -20,6 +19,9 @@ namespace HideUnobtrusiveCodes.Tagging
     sealed class AdornmentTagger : ITagger<IntraTextAdornmentTag>, IDisposable
     {
         #region Static Fields
+        /// <summary>
+        ///     The scope static
+        /// </summary>
         internal static AdornmentTaggerScope scopeStatic;
         #endregion
 
@@ -171,6 +173,9 @@ namespace HideUnobtrusiveCodes.Tagging
             return returnValues;
         }
 
+        /// <summary>
+        ///     Translates the adornment cache.
+        /// </summary>
         static AdornmentCache TranslateAdornmentCache(ITextSnapshot targetSnapshot, Dictionary<SnapshotSpan, Adornment> adornmentCache)
         {
             var translatedAdornmentCache = new Dictionary<SnapshotSpan, Adornment>();
@@ -279,6 +284,9 @@ namespace HideUnobtrusiveCodes.Tagging
             return returnList;
         }
 
+        /// <summary>
+        ///     Gets the or create adornment.
+        /// </summary>
         UIElement GetOrCreateAdornment(AdornmentCache adornmentCache, SnapshotSpan snapshotSpan, TagData tagData, HashSet<SnapshotSpan> toRemove)
         {
             Adornment adornment;
@@ -372,6 +380,9 @@ namespace HideUnobtrusiveCodes.Tagging
             }
         }
 
+        /// <summary>
+        ///     Called when [adornment clicked].
+        /// </summary>
         void OnAdornmentClicked(TagData tagData)
         {
             scope.DisabledSnapshotSpans.Add(tagData.Span);
@@ -387,12 +398,18 @@ namespace HideUnobtrusiveCodes.Tagging
             TagsChanged?.Invoke(this, new SnapshotSpanEventArgs(span));
         }
 
+        /// <summary>
+        ///     Translates the disabled snapshots.
+        /// </summary>
         void TranslateDisabledSnapshots()
         {
             TranslateToCurrentSnapshot(scope.DisabledSnapshotSpans);
             TranslateToCurrentSnapshot(scope.EditedSpans);
         }
 
+        /// <summary>
+        ///     Translates to current snapshot.
+        /// </summary>
         void TranslateToCurrentSnapshot(List<SnapshotSpan> spans)
         {
             if (spans == null)

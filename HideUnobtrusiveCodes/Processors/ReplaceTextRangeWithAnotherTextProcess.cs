@@ -1,17 +1,21 @@
 ﻿using System;
-using HideUnobtrusiveCodes.Common;
 using HideUnobtrusiveCodes.Dataflow;
 using HideUnobtrusiveCodes.Tagging;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
-using static HideUnobtrusiveCodes.Common.Mixin;
 using static HideUnobtrusiveCodes.Processors.Keys;
 
 namespace HideUnobtrusiveCodes.Processors
 {
+    /// <summary>
+    ///     The replace text range with another text process
+    /// </summary>
     class ReplaceTextRangeWithAnotherTextProcess
     {
         #region Public Methods
+        /// <summary>
+        ///     Processes the replace text range with another texts.
+        /// </summary>
         public static void ProcessReplaceTextRangeWithAnotherTexts(Scope scope)
         {
             var getTextAtLine     = scope.Get(GetTextAtLine);

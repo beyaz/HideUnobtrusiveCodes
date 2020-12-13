@@ -1,5 +1,4 @@
-﻿using HideUnobtrusiveCodes.Common;
-using HideUnobtrusiveCodes.Dataflow;
+﻿using HideUnobtrusiveCodes.Dataflow;
 using HideUnobtrusiveCodes.Tagging;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
@@ -8,9 +7,15 @@ using static HideUnobtrusiveCodes.Processors.Keys;
 
 namespace HideUnobtrusiveCodes.Processors
 {
+    /// <summary>
+    ///     The scope to variable assignment processor
+    /// </summary>
     static class ScopeToVariableAssignmentProcessor
     {
         #region Public Methods
+        /// <summary>
+        ///     Processes the scope to variable assignments.
+        /// </summary>
         public static void ProcessScopeToVariableAssignments(Scope scope)
         {
             var getTextAtLine     = scope.Get(GetTextAtLine);

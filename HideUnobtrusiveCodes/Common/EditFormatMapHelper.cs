@@ -3,9 +3,15 @@ using Microsoft.VisualStudio.Text.Classification;
 
 namespace HideUnobtrusiveCodes.Common
 {
+    /// <summary>
+    ///     The edit format map helper
+    /// </summary>
     static class EditFormatMapHelper
     {
         #region Public Methods
+        /// <summary>
+        ///     Gets the size of the font.
+        /// </summary>
         public static double GetFontSize(this IEditorFormatMap formatMap)
         {
             var result     = 10.0;
@@ -19,6 +25,9 @@ namespace HideUnobtrusiveCodes.Common
             return result;
         }
 
+        /// <summary>
+        ///     Gets the typeface.
+        /// </summary>
         public static Typeface GetTypeface(this IEditorFormatMap formatMap)
         {
             Typeface result     = null;

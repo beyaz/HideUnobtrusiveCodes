@@ -6,7 +6,6 @@ using HideUnobtrusiveCodes.Tagging;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
 using static System.String;
-using static HideUnobtrusiveCodes.Common.Mixin;
 
 namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
 {

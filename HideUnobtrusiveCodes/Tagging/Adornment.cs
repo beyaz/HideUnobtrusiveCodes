@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using HideUnobtrusiveCodes.Common;
 using HideUnobtrusiveCodes.Dataflow;
 using HideUnobtrusiveCodes.Processors;
 
@@ -13,6 +12,9 @@ namespace HideUnobtrusiveCodes.Tagging
     sealed class Adornment
     {
         #region Fields
+        /// <summary>
+        ///     The scope
+        /// </summary>
         readonly Scope scope;
         #endregion
 
@@ -29,7 +31,14 @@ namespace HideUnobtrusiveCodes.Tagging
         #endregion
 
         #region Public Properties
+        /// <summary>
+        ///     Gets the data.
+        /// </summary>
         public TagData Data => scope.Get(Keys.TagModel);
+
+        /// <summary>
+        ///     Gets the UI element.
+        /// </summary>
         public Control UIElement { get; private set; }
         #endregion
 
@@ -50,6 +59,9 @@ namespace HideUnobtrusiveCodes.Tagging
             }
         }
 
+        /// <summary>
+        ///     Creates the element.
+        /// </summary>
         static Control CreateElement(Scope scope)
         {
             var tagData            = scope.Get(Keys.TagModel);
@@ -65,6 +77,9 @@ namespace HideUnobtrusiveCodes.Tagging
             return CreateTextBox(scope);
         }
 
+        /// <summary>
+        ///     Creates the text box.
+        /// </summary>
         static TextBox CreateTextBox(Scope scope)
         {
             var tagData                           = scope.Get(Keys.TagModel);

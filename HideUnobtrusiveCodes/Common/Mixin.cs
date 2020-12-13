@@ -14,15 +14,18 @@ namespace HideUnobtrusiveCodes.Common
     /// </summary>
     static class Mixin
     {
-        #region Static Fields
-       
-
-       
+        #region Public Methods
+        /// <summary>
+        ///     Gets the first character index has value.
+        /// </summary>
         public static int GetFirstCharIndexHasValue(string value)
         {
             return value.IndexOf(value.TrimStart().First().ToString(), StringComparison.OrdinalIgnoreCase);
         }
 
+        /// <summary>
+        ///     Gets the text at line function.
+        /// </summary>
         public static Func<int, string> GetTextAtLineFunc(ITextSnapshotLine[] lines)
         {
             var length = lines.Length;
@@ -38,6 +41,9 @@ namespace HideUnobtrusiveCodes.Common
             };
         }
 
+        /// <summary>
+        ///     Determines whether the specified a has intersection.
+        /// </summary>
         public static bool HasIntersection(NormalizedSnapshotSpanCollection a, NormalizedSnapshotSpanCollection b)
         {
             try
@@ -52,6 +58,9 @@ namespace HideUnobtrusiveCodes.Common
             return false;
         }
 
+        /// <summary>
+        ///     Hides the lines.
+        /// </summary>
         public static SnapshotSpan HideLines(IReadOnlyList<ITextSnapshotLine> snapshotLines, int startLineIndex, int endLineIndex)
         {
             var length = snapshotLines.Count;
@@ -104,6 +113,9 @@ namespace HideUnobtrusiveCodes.Common
             return false;
         }
 
+        /// <summary>
+        ///     Determines whether [is scope assignment] [the specified scope].
+        /// </summary>
         public static bool IsScopeAssignment(Scope scope, int lineIndex)
         {
             var getTextAtline                = scope.Get(Keys.GetTextAtLine);
@@ -132,6 +144,9 @@ namespace HideUnobtrusiveCodes.Common
             return true;
         }
 
+        /// <summary>
+        ///     Lines the contains.
+        /// </summary>
         public static bool LineContains(Scope scope, int lineIndex, string value)
         {
             var getTextAtLine = scope.Get(Keys.GetTextAtLine);
@@ -145,16 +160,25 @@ namespace HideUnobtrusiveCodes.Common
             return line.IndexOf(value, StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
+        /// <summary>
+        ///     Lines the contains.
+        /// </summary>
         public static bool LineContains(Func<int, string> getTextAtline, int lineIndex, string value)
         {
             return getTextAtline(lineIndex)?.IndexOf(value, StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
+        /// <summary>
+        ///     Lines the starts with.
+        /// </summary>
         public static bool LineStartsWith(Func<int, string> getTextAtline, int lineIndex, string value)
         {
             return getTextAtline(lineIndex)?.TrimStart().StartsWith(value) ?? false;
         }
 
+        /// <summary>
+        ///     Lines the starts with.
+        /// </summary>
         public static bool LineStartsWith(Scope scope, int lineIndex, string[] values)
         {
             var getTextAtLine = scope.Get(Keys.GetTextAtLine);
@@ -217,6 +241,9 @@ namespace HideUnobtrusiveCodes.Common
             return data;
         }
 
+        /// <summary>
+        ///     Skips the chars.
+        /// </summary>
         public static SnapshotPoint SkipChars(this SnapshotPoint start, char value)
         {
             var currentChar = start.GetChar();
@@ -233,8 +260,9 @@ namespace HideUnobtrusiveCodes.Common
         #endregion
 
         #region Methods
-       
-
+        /// <summary>
+        ///     Intersectses the with.
+        /// </summary>
         static bool IntersectsWith(SnapshotSpan a, SnapshotSpan b)
         {
             try
@@ -252,6 +280,9 @@ namespace HideUnobtrusiveCodes.Common
             return false;
         }
 
+        /// <summary>
+        ///     To the line.
+        /// </summary>
         static SnapshotSpan ToLine(SnapshotSpan snapshotSpan)
         {
             var textSnapshotLine = snapshotSpan.Snapshot.GetLineFromPosition(snapshotSpan.Start.Position);

@@ -1,5 +1,4 @@
-﻿using HideUnobtrusiveCodes.Common;
-using HideUnobtrusiveCodes.Dataflow;
+﻿using HideUnobtrusiveCodes.Dataflow;
 using HideUnobtrusiveCodes.Tagging;
 using Microsoft.VisualStudio.Text.Tagging;
 using static HideUnobtrusiveCodes.Common.Mixin;
@@ -7,9 +6,15 @@ using static HideUnobtrusiveCodes.Processors.Keys;
 
 namespace HideUnobtrusiveCodes.Processors
 {
+    /// <summary>
+    ///     The hide line when line starts with processor
+    /// </summary>
     static class HideLineWhenLineStartsWithProcessor
     {
         #region Public Methods
+        /// <summary>
+        ///     Processes the hide line when line starts with.
+        /// </summary>
         public static void ProcessHideLineWhenLineStartsWith(Scope scope)
         {
             var getTextAtLine     = scope.Get(GetTextAtLine);
