@@ -1,12 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Windows.Controls;
 using HideUnobtrusiveCodes.BOAResponseCheckCollapsing;
 using Microsoft.VisualStudio.Text;
 using static HideUnobtrusiveCodes.MyUtil;
 
 namespace HideUnobtrusiveCodes
 {
+    partial class Mixin
+    {
+        public static readonly DataKey<Func<int, string>> GetTextAtLine = CreateKey<Func<int, string>>();
+        public static readonly DataKey<List<string>> ScopeAssignmentVariableNames = CreateKey<List<string>>();
+        public static readonly DataKey<OptionsModel> Option = CreateKey<OptionsModel>();
+
+        public static readonly DataKey<Action<TextBox>> UpdateTextBoxStyleForVisualStudio = CreateKey<Action<TextBox>>();
+        
+        public static readonly DataKey<TagData> TagModel = CreateKey<TagData>();
+        public static readonly DataKey<Action<TagData>> OnAdornmentClicked = CreateKey<Action<TagData>>();
+        public static readonly DataKey<bool> IsAnyValueProcessed = CreateKey<bool>();
+
+        static DataKey<T> CreateKey<T>([CallerMemberName] string propertyName = null)
+        {
+            return new DataKey<T>(typeof(Mixin), propertyName);
+        }
+    }
+
     /// <summary>
     ///     The mixin
     /// </summary>

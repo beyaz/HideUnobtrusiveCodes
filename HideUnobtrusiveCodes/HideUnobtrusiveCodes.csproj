@@ -85,30 +85,30 @@
   <ItemGroup>
     <Compile Include="BOAResponseCheckCollapsing\BOAResponseCheckProcessor.cs" />
     <Compile Include="BOAResponseCheckCollapsing\VariableAssignmentLine.cs" />
-    <Compile Include="CommentIcon.xaml.cs">
+    <Compile Include="Taggers\CommentIcon.xaml.cs">
       <DependentUpon>CommentIcon.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FilePathHelper.cs" />
-    <Compile Include="GlobalScopeAccess.cs" />
-    <Compile Include="Mixin.cs" />
-    <Compile Include="MyUtil.cs" />
-    <Compile Include="OptionsModel.cs" />
-    <Compile Include="OptionsReader.cs" />
-    <Compile Include="Adornment.cs" />
-    <Compile Include="AdornmentTaggerScope.cs" />
+    <Compile Include="Common\FilePathHelper.cs" />
+    <Compile Include="Taggers\GlobalScopeAccess.cs" />
+    <Compile Include="Common\Mixin.cs" />
+    <Compile Include="Common\MyUtil.cs" />
+    <Compile Include="Common\OptionsModel.cs" />
+    <Compile Include="Common\OptionsReader.cs" />
+    <Compile Include="Taggers\Adornment.cs" />
+    <Compile Include="Taggers\AdornmentTaggerScope.cs" />
     <Compile Include="Processors\CommentProcessor.cs" />
     <Compile Include="Processors\HideLineWhenLineStartsWithProcessor.cs" />
     <Compile Include="Processors\ReplaceLineWithAnotherTextProcess.cs" />
     <Compile Include="Processors\ReplaceTextRangeWithAnotherTextProcess.cs" />
     <Compile Include="Processors\ScopeToVariableAssignmentProcessor.cs" />
-    <Compile Include="Scope.cs" />
-    <Compile Include="TagData.cs" />
-    <Compile Include="AdornmentTaggerProvider.cs" />
-    <Compile Include="TaggerProvider.cs" />
-    <Compile Include="EditFormatMapHelper.cs" />
+    <Compile Include="Dataflow\Scope.cs" />
+    <Compile Include="Taggers\TagData.cs" />
+    <Compile Include="Taggers\AdornmentTaggerProvider.cs" />
+    <Compile Include="Taggers\TaggerProvider.cs" />
+    <Compile Include="Common\EditFormatMapHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="AdornmentTagger.cs" />
-    <Compile Include="Tagger.cs" />
+    <Compile Include="Taggers\AdornmentTagger.cs" />
+    <Compile Include="Taggers\Tagger.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="HideUnobtrusiveCodes.Options.yaml">
@@ -123,7 +123,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="CommentIcon.xaml">
+    <Page Include="Taggers\CommentIcon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
