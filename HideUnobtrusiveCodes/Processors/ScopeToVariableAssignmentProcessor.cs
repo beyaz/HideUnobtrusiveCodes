@@ -4,19 +4,6 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
 using static HideUnobtrusiveCodes.Mixin;
 
-namespace HideUnobtrusiveCodes
-{
-    partial class Mixin
-    {
-        #region Static Fields
-        public static readonly DataKey<int> CurrentLineIndex = CreateKey<int>();
-        public static readonly DataKey<int> LineCount = CreateKey<int>();
-        public static readonly DataKey<IReadOnlyList<ITextSnapshotLine>> TextSnapshotLines = CreateKey<IReadOnlyList<ITextSnapshotLine>>();
-        public static readonly DataKey<Action<ITagSpan<TagData>>> AddTagSpan = CreateKey<Action<ITagSpan<TagData>>>();
-        #endregion
-
-    }
-}
 
 namespace HideUnobtrusiveCodes.Processors
 {

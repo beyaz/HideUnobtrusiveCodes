@@ -6,11 +6,27 @@ using System.Windows.Controls;
 using HideUnobtrusiveCodes.BOAResponseCheckCollapsing;
 using Microsoft.VisualStudio.Text;
 using static HideUnobtrusiveCodes.MyUtil;
+using System;
+using System.Collections.Generic;
+using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Tagging;
+using static HideUnobtrusiveCodes.Mixin;
 
 namespace HideUnobtrusiveCodes
 {
-    partial class Mixin
+   
+
+    /// <summary>
+    ///     The mixin
+    /// </summary>
+    static class Mixin
     {
+        public static readonly DataKey<int> CurrentLineIndex = CreateKey<int>();
+        public static readonly DataKey<int> LineCount = CreateKey<int>();
+        public static readonly DataKey<IReadOnlyList<ITextSnapshotLine>> TextSnapshotLines = CreateKey<IReadOnlyList<ITextSnapshotLine>>();
+        public static readonly DataKey<Action<ITagSpan<TagData>>> AddTagSpan = CreateKey<Action<ITagSpan<TagData>>>();
+
+
         public static readonly DataKey<Func<int, string>> GetTextAtLine = CreateKey<Func<int, string>>();
         public static readonly DataKey<List<string>> ScopeAssignmentVariableNames = CreateKey<List<string>>();
         public static readonly DataKey<OptionsModel> Option = CreateKey<OptionsModel>();
@@ -25,13 +41,7 @@ namespace HideUnobtrusiveCodes
         {
             return new DataKey<T>(typeof(Mixin), propertyName);
         }
-    }
 
-    /// <summary>
-    ///     The mixin
-    /// </summary>
-    static partial class Mixin
-    {
         public static bool LineStartsWith(Func<int,string> getTextAtline, int lineIndex, string value)
         {
             return getTextAtline(lineIndex)?.TrimStart().StartsWith(value)??false;
