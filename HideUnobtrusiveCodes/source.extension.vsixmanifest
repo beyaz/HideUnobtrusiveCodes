@@ -13,7 +13,7 @@
 -->
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="b0ec7ea6-c31a-4422-aef4-d5104f37d9be" Version="1.0" Language="en-US" Publisher="Abdullah Beyaztaş" />
+        <Identity Id="7d201204-01fe-484d-b8bb-c02e0f8b302c" Version="1.0" Language="en-US" Publisher="Abdullah Beyaztaş" />
         <DisplayName>HideUnobtrusiveCodes</DisplayName>
         <Description xml:space="preserve">Hides or replaces some specified lines or text patterns.</Description>
     </Metadata>
