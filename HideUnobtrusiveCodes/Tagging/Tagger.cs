@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using HideUnobtrusiveCodes.Common;
 using HideUnobtrusiveCodes.Dataflow;
 using HideUnobtrusiveCodes.Processors;
 using HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing;
@@ -121,14 +122,14 @@ namespace HideUnobtrusiveCodes.Tagging
 
             var scope = new Scope
             {
-                {Option, options},
-                {GetTextAtLine, textAtLineFunc},
-                {ScopeAssignmentVariableNames, new List<string>()},
-                {TextSnapshotLines, snapshotLines},
-                {CurrentLineIndex, 0}
+                {Keys.Option, options},
+                {Keys.GetTextAtLine, textAtLineFunc},
+                {Keys.ScopeAssignmentVariableNames, new List<string>()},
+                {Keys.TextSnapshotLines, snapshotLines},
+                {Keys.CurrentLineIndex, 0}
             };
-            scope.SetupGet(AddTagSpan, s => returnList.Add);
-            scope.SetupGet(LineCount, c => textSnapshotLines.Count);
+            scope.SetupGet(Keys.AddTagSpan, s => returnList.Add);
+            scope.SetupGet(Keys.LineCount, c => textSnapshotLines.Count);
 
             Parse(scope);
 
@@ -137,26 +138,26 @@ namespace HideUnobtrusiveCodes.Tagging
 
         static void Parse(Scope scope)
         {
-            var textSnapshotLines = scope.Get(TextSnapshotLines);
+            var textSnapshotLines = scope.Get(Keys.TextSnapshotLines);
 
             var length = textSnapshotLines.Count;
 
             for (var i = 0; i < length;)
             {
-                scope.Update(CurrentLineIndex, i);
+                scope.Update(Keys.CurrentLineIndex, i);
 
-                scope.Update(IsAnyValueProcessed, false);
+                scope.Update(Keys.IsAnyValueProcessed, false);
 
                 foreach (var process in procesList)
                 {
                     process(scope);
-                    if (scope.Get(IsAnyValueProcessed))
+                    if (scope.Get(Keys.IsAnyValueProcessed))
                     {
                         break;
                     }
                 }
 
-                var currentLineIndex = scope.Get(CurrentLineIndex);
+                var currentLineIndex = scope.Get(Keys.CurrentLineIndex);
 
                 if (currentLineIndex == i)
                 {

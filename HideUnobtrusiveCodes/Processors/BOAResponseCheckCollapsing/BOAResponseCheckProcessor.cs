@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using HideUnobtrusiveCodes.Common;
 using HideUnobtrusiveCodes.Dataflow;
 using HideUnobtrusiveCodes.Tagging;
 using Microsoft.VisualStudio.Text;
@@ -44,11 +45,11 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
             //}
             // var x = response.Value;
 
-            var lineCount         = scope.Get(LineCount);
-            var getTextAtLine     = scope.Get(GetTextAtLine);
-            var currentLineIndex  = scope.Get(CurrentLineIndex);
-            var addTagSpan        = scope.Get(AddTagSpan);
-            var textSnapshotLines = scope.Get(TextSnapshotLines);
+            var lineCount         = scope.Get(Keys.LineCount);
+            var getTextAtLine     = scope.Get(Keys.GetTextAtLine);
+            var currentLineIndex  = scope.Get(Keys.CurrentLineIndex);
+            var addTagSpan        = scope.Get(Keys.AddTagSpan);
+            var textSnapshotLines = scope.Get(Keys.TextSnapshotLines);
 
             scope.Update(IsParseFailed, false);
             scope.Update(Cursor, currentLineIndex);
@@ -79,11 +80,11 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
         /// </summary>
         static void CalculateSpans(Scope scope)
         {
-            var lineCount              = scope.Get(LineCount);
-            var getTextAtLine          = scope.Get(GetTextAtLine);
-            var currentLineIndex       = scope.Get(CurrentLineIndex);
-            var addTagSpan             = scope.Get(AddTagSpan);
-            var textSnapshotLines      = scope.Get(TextSnapshotLines);
+            var lineCount              = scope.Get(Keys.LineCount);
+            var getTextAtLine          = scope.Get(Keys.GetTextAtLine);
+            var currentLineIndex       = scope.Get(Keys.CurrentLineIndex);
+            var addTagSpan             = scope.Get(Keys.AddTagSpan);
+            var textSnapshotLines      = scope.Get(Keys.TextSnapshotLines);
             var responseAssignmentLine = scope.Get(ResponseAssignmentLine);
 
             var responseValueAssignmentToAnotherVariable = VariableAssignmentLine.Parse(getTextAtLine(scope.Get(Cursor)));
@@ -110,8 +111,8 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
 
                 addTagSpan(new TagSpan<TagData>(span, tag));
 
-                scope.Update(CurrentLineIndex, scope.Get(Cursor) + 1);
-                scope.Update(IsAnyValueProcessed, true);
+                scope.Update(Keys.CurrentLineIndex, scope.Get(Cursor) + 1);
+                scope.Update(Keys.IsAnyValueProcessed, true);
 
                 return;
             }
@@ -125,8 +126,8 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
                 addTagSpan(new TagSpan<TagData>(span, tag));
             }
 
-            scope.Update(CurrentLineIndex, scope.Get(Cursor) + 1);
-            scope.Update(IsAnyValueProcessed, true);
+            scope.Update(Keys.CurrentLineIndex, scope.Get(Cursor) + 1);
+            scope.Update(Keys.IsAnyValueProcessed, true);
         }
 
         /// <summary>
@@ -134,8 +135,8 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
         /// </summary>
         static void CheckMinimumLineCount(Scope scope)
         {
-            var lineCount        = scope.Get(LineCount);
-            var currentLineIndex = scope.Get(CurrentLineIndex);
+            var lineCount        = scope.Get(Keys.LineCount);
+            var currentLineIndex = scope.Get(Keys.CurrentLineIndex);
 
             if (currentLineIndex + 4 >= lineCount)
             {
@@ -156,7 +157,7 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
         /// </summary>
         static bool IsLineEqualTo(Scope scope, string text)
         {
-            var getTextAtLine = scope.Get(GetTextAtLine);
+            var getTextAtLine = scope.Get(Keys.GetTextAtLine);
             var lineIndex     = scope.Get(Cursor);
 
             return getTextAtLine(lineIndex)?.Trim() == text;
@@ -167,8 +168,8 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
         /// </summary>
         static void MoveCursor(Scope scope)
         {
-            var lineCount     = scope.Get(LineCount);
-            var getTextAtLine = scope.Get(GetTextAtLine);
+            var lineCount     = scope.Get(Keys.LineCount);
+            var getTextAtLine = scope.Get(Keys.GetTextAtLine);
             var cursor        = scope.Get(Cursor) + 1;
 
             while (cursor < lineCount)
@@ -207,8 +208,8 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
         /// </summary>
         static void ShouldBe(Scope scope, string expectedText)
         {
-            var lineCount     = scope.Get(LineCount);
-            var getTextAtLine = scope.Get(GetTextAtLine);
+            var lineCount     = scope.Get(Keys.LineCount);
+            var getTextAtLine = scope.Get(Keys.GetTextAtLine);
             var cursor        = scope.Get(Cursor);
 
             if (!IsLineEqualTo(scope, expectedText))
@@ -222,11 +223,11 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
         /// </summary>
         static void ShouldBeCombineResponseWithReturnObject(Scope scope)
         {
-            var lineCount              = scope.Get(LineCount);
-            var getTextAtLine          = scope.Get(GetTextAtLine);
-            var currentLineIndex       = scope.Get(CurrentLineIndex);
-            var addTagSpan             = scope.Get(AddTagSpan);
-            var textSnapshotLines      = scope.Get(TextSnapshotLines);
+            var lineCount              = scope.Get(Keys.LineCount);
+            var getTextAtLine          = scope.Get(Keys.GetTextAtLine);
+            var currentLineIndex       = scope.Get(Keys.CurrentLineIndex);
+            var addTagSpan             = scope.Get(Keys.AddTagSpan);
+            var textSnapshotLines      = scope.Get(Keys.TextSnapshotLines);
             var responseAssignmentLine = scope.Get(ResponseAssignmentLine);
 
             if (IsLineEqualTo(scope, $"returnObject.Results.AddRange({responseAssignmentLine.VariableName}.Results);"))
@@ -252,8 +253,8 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
         /// </summary>
         static void ShouldBeResponseCheck(Scope scope)
         {
-            var lineCount     = scope.Get(LineCount);
-            var getTextAtLine = scope.Get(GetTextAtLine);
+            var lineCount     = scope.Get(Keys.LineCount);
+            var getTextAtLine = scope.Get(Keys.GetTextAtLine);
             var cursor        = scope.Get(Cursor);
 
             var line = getTextAtLine(cursor);
@@ -271,7 +272,7 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
                 var responseVariableName = line.RemoveFromStart("if(!");
                 responseVariableName = responseVariableName.RemoveFromEnd(".Success)");
 
-                var responseAssignmentLine = VariableAssignmentLine.Parse(getTextAtLine(scope.Get(CurrentLineIndex)));
+                var responseAssignmentLine = VariableAssignmentLine.Parse(getTextAtLine(scope.Get(Keys.CurrentLineIndex)));
                 if (responseAssignmentLine == null)
                 {
                     scope.Update(IsParseFailed, true);

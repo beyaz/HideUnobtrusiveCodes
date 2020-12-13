@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using HideUnobtrusiveCodes.Common;
 using HideUnobtrusiveCodes.Dataflow;
+using HideUnobtrusiveCodes.Processors;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
@@ -292,9 +293,9 @@ namespace HideUnobtrusiveCodes.Tagging
             {
                 var adornmentScope = new Scope
                 {
-                    {TagModel, tagData},
-                    {Mixin.OnAdornmentClicked, OnAdornmentClicked},
-                    {UpdateTextBoxStyleForVisualStudio, scope.TextBlockStyler}
+                    {Keys.TagModel, tagData},
+                    {Keys.OnAdornmentClicked, OnAdornmentClicked},
+                    {Keys.UpdateTextBoxStyleForVisualStudio, scope.TextBlockStyler}
                 };
                 adornment = new Adornment(adornmentScope);
 

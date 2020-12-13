@@ -83,6 +83,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Processors\Keys.cs" />
     <Compile Include="Common\OldNewPair.cs" />
     <Compile Include="Dataflow\DataKey.cs" />
     <Compile Include="Processors\BOAResponseCheckCollapsing\BOAResponseCheckProcessor.cs" />

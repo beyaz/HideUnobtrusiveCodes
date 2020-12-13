@@ -1,8 +1,10 @@
-﻿using HideUnobtrusiveCodes.Dataflow;
+﻿using HideUnobtrusiveCodes.Common;
+using HideUnobtrusiveCodes.Dataflow;
 using HideUnobtrusiveCodes.Tagging;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
 using static HideUnobtrusiveCodes.Common.Mixin;
+using static HideUnobtrusiveCodes.Processors.Keys;
 
 namespace HideUnobtrusiveCodes.Processors
 {

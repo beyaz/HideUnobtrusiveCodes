@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Windows.Controls;
 using HideUnobtrusiveCodes.Dataflow;
+using HideUnobtrusiveCodes.Processors;
 using HideUnobtrusiveCodes.Tagging;
 using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Text.Tagging;
 using static HideUnobtrusiveCodes.Common.MyUtil;
 
 namespace HideUnobtrusiveCodes.Common
@@ -17,21 +15,9 @@ namespace HideUnobtrusiveCodes.Common
     static class Mixin
     {
         #region Static Fields
-        public static readonly DataKey<int> CurrentLineIndex = CreateKey<int>();
-        public static readonly DataKey<int> LineCount = CreateKey<int>();
-        public static readonly DataKey<IReadOnlyList<ITextSnapshotLine>> TextSnapshotLines = CreateKey<IReadOnlyList<ITextSnapshotLine>>();
-        public static readonly DataKey<Action<ITagSpan<TagData>>> AddTagSpan = CreateKey<Action<ITagSpan<TagData>>>();
+       
 
-        public static readonly DataKey<Func<int, string>> GetTextAtLine = CreateKey<Func<int, string>>();
-        public static readonly DataKey<List<string>> ScopeAssignmentVariableNames = CreateKey<List<string>>();
-        public static readonly DataKey<OptionsModel> Option = CreateKey<OptionsModel>();
-        public static readonly DataKey<Action<TextBox>> UpdateTextBoxStyleForVisualStudio = CreateKey<Action<TextBox>>();
-        public static readonly DataKey<TagData> TagModel = CreateKey<TagData>();
-        public static readonly DataKey<Action<TagData>> OnAdornmentClicked = CreateKey<Action<TagData>>();
-        public static readonly DataKey<bool> IsAnyValueProcessed = CreateKey<bool>();
-        #endregion
-
-        #region Public Methods
+       
         public static int GetFirstCharIndexHasValue(string value)
         {
             return value.IndexOf(value.TrimStart().First().ToString(), StringComparison.OrdinalIgnoreCase);
@@ -120,8 +106,8 @@ namespace HideUnobtrusiveCodes.Common
 
         public static bool IsScopeAssignment(Scope scope, int lineIndex)
         {
-            var getTextAtline                = scope.Get(GetTextAtLine);
-            var scopeAssignmentVariableNames = scope.Get(ScopeAssignmentVariableNames);
+            var getTextAtline                = scope.Get(Keys.GetTextAtLine);
+            var scopeAssignmentVariableNames = scope.Get(Keys.ScopeAssignmentVariableNames);
 
             var isStartsWithVar = LineStartsWith(getTextAtline, lineIndex, "var ");
             if (!isStartsWithVar)
@@ -148,7 +134,7 @@ namespace HideUnobtrusiveCodes.Common
 
         public static bool LineContains(Scope scope, int lineIndex, string value)
         {
-            var getTextAtLine = scope.Get(GetTextAtLine);
+            var getTextAtLine = scope.Get(Keys.GetTextAtLine);
 
             var line = getTextAtLine(lineIndex);
             if (line == null)
@@ -171,7 +157,7 @@ namespace HideUnobtrusiveCodes.Common
 
         public static bool LineStartsWith(Scope scope, int lineIndex, string[] values)
         {
-            var getTextAtLine = scope.Get(GetTextAtLine);
+            var getTextAtLine = scope.Get(Keys.GetTextAtLine);
 
             var line = getTextAtLine(lineIndex);
             if (line == null)
@@ -247,10 +233,7 @@ namespace HideUnobtrusiveCodes.Common
         #endregion
 
         #region Methods
-        static DataKey<T> CreateKey<T>([CallerMemberName] string propertyName = null)
-        {
-            return new DataKey<T>(typeof(Mixin), propertyName);
-        }
+       
 
         static bool IntersectsWith(SnapshotSpan a, SnapshotSpan b)
         {

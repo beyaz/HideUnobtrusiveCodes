@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using HideUnobtrusiveCodes.Common;
 using HideUnobtrusiveCodes.Dataflow;
+using HideUnobtrusiveCodes.Processors;
 
 namespace HideUnobtrusiveCodes.Tagging
 {
@@ -28,7 +29,7 @@ namespace HideUnobtrusiveCodes.Tagging
         #endregion
 
         #region Public Properties
-        public TagData Data => scope.Get(Mixin.TagModel);
+        public TagData Data => scope.Get(Keys.TagModel);
         public Control UIElement { get; private set; }
         #endregion
 
@@ -38,7 +39,7 @@ namespace HideUnobtrusiveCodes.Tagging
         /// </summary>
         internal void Update(TagData data)
         {
-            var updateTextBoxStyleForVisualStudio = scope.Get(Mixin.UpdateTextBoxStyleForVisualStudio);
+            var updateTextBoxStyleForVisualStudio = scope.Get(Keys.UpdateTextBoxStyleForVisualStudio);
 
             var textBox = UIElement as TextBox;
             if (textBox != null)
@@ -51,13 +52,13 @@ namespace HideUnobtrusiveCodes.Tagging
 
         static Control CreateElement(Scope scope)
         {
-            var tagData            = scope.Get(Mixin.TagModel);
-            var onAdornmentClicked = scope.Get(Mixin.OnAdornmentClicked);
+            var tagData            = scope.Get(Keys.TagModel);
+            var onAdornmentClicked = scope.Get(Keys.OnAdornmentClicked);
 
             if (tagData.ShowCommentIcon)
             {
                 var el = CommentIcon.Create();
-                el.MouseDoubleClick += (s, e) => { onAdornmentClicked?.Invoke(scope.Get(Mixin.TagModel)); };
+                el.MouseDoubleClick += (s, e) => { onAdornmentClicked?.Invoke(scope.Get(Keys.TagModel)); };
                 return el;
             }
 
@@ -66,9 +67,9 @@ namespace HideUnobtrusiveCodes.Tagging
 
         static TextBox CreateTextBox(Scope scope)
         {
-            var tagData                           = scope.Get(Mixin.TagModel);
-            var onAdornmentClicked                = scope.Get(Mixin.OnAdornmentClicked);
-            var updateTextBoxStyleForVisualStudio = scope.Get(Mixin.UpdateTextBoxStyleForVisualStudio);
+            var tagData                           = scope.Get(Keys.TagModel);
+            var onAdornmentClicked                = scope.Get(Keys.OnAdornmentClicked);
+            var updateTextBoxStyleForVisualStudio = scope.Get(Keys.UpdateTextBoxStyleForVisualStudio);
 
             var element = new TextBox
             {
@@ -79,7 +80,7 @@ namespace HideUnobtrusiveCodes.Tagging
 
             updateTextBoxStyleForVisualStudio(element);
 
-            element.MouseDoubleClick += (s, e) => { onAdornmentClicked?.Invoke(scope.Get(Mixin.TagModel)); };
+            element.MouseDoubleClick += (s, e) => { onAdornmentClicked?.Invoke(scope.Get(Keys.TagModel)); };
 
             return element;
         }
