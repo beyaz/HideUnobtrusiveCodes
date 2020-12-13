@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using YamlDotNet.Serialization;
+using static HideUnobtrusiveCodes.FilePathHelper;
 
 namespace HideUnobtrusiveCodes
 {
@@ -15,13 +16,7 @@ namespace HideUnobtrusiveCodes
         /// </summary>
         static OptionsModel instance;
         #endregion
-
-        #region Properties
-        /// <summary>
-        ///     Gets the option file path.
-        /// </summary>
-        static string OptionFilePath => Path.GetDirectoryName(typeof(OptionsReader).Assembly.Location) + Path.DirectorySeparatorChar + "HideUnobtrusiveCodes.Options.yaml";
-        #endregion
+        
 
         #region Public Methods
         /// <summary>
@@ -34,7 +29,9 @@ namespace HideUnobtrusiveCodes
                 return instance;
             }
 
-            return instance = ReadFromFile(OptionFilePath, () => new FileNotFoundException(OptionFilePath));
+            var optionFilePath = GetFileFullPath("HideUnobtrusiveCodes.Options.yaml");
+
+            return instance = ReadFromFile(optionFilePath);
         }
         #endregion
 
@@ -42,12 +39,11 @@ namespace HideUnobtrusiveCodes
         /// <summary>
         ///     Reads from file.
         /// </summary>
-        static OptionsModel ReadFromFile(string filePath, Action whenFileIsNotFound)
+        static OptionsModel ReadFromFile(string filePath)
         {
             if (!File.Exists(filePath))
             {
-                whenFileIsNotFound();
-                return null;
+                throw new FileNotFoundException(filePath);
             }
 
             var yamlContent = string.Empty;

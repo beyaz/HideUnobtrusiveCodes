@@ -198,7 +198,7 @@ namespace HideUnobtrusiveCodes
             {
                 snapshot = view.TextBuffer.CurrentSnapshot;
 
-                scope.adornmentCache = TranslateAdornmentCache(snapshot, scope.adornmentCache);
+                scope.AdornmentCache = TranslateAdornmentCache(snapshot, scope.AdornmentCache);
             }
 
             List<SnapshotSpan> translatedSpans;
@@ -213,7 +213,7 @@ namespace HideUnobtrusiveCodes
                 return;
             }
 
-            scope.editedSpans.AddRange(translatedSpans);
+            scope.EditedSpans.AddRange(translatedSpans);
 
             var start = translatedSpans.Select(span => span.Start).Min();
             var end   = translatedSpans.Select(span => span.End).Max();
@@ -228,7 +228,7 @@ namespace HideUnobtrusiveCodes
         {
 
             TranslateToCurrentSnapshot(scope.DisabledSnapshotSpans);
-            TranslateToCurrentSnapshot(scope.editedSpans);
+            TranslateToCurrentSnapshot(scope.EditedSpans);
         }
 
         void TranslateToCurrentSnapshot(List<SnapshotSpan> spans)
@@ -252,7 +252,7 @@ namespace HideUnobtrusiveCodes
         {
             var returnList = new List<TagSpan<IntraTextAdornmentTag>>();
 
-            var adornmentCache = scope.adornmentCache;
+            var adornmentCache = scope.AdornmentCache;
 
             if (spans.Count == 0)
             {
@@ -314,7 +314,7 @@ namespace HideUnobtrusiveCodes
                 {
                     {TagModel,tagData},
                     {Mixin.OnAdornmentClicked,OnAdornmentClicked},
-                    {UpdateTextBoxStyleForVisualStudio,scope.textBlockStyler}
+                    {UpdateTextBoxStyleForVisualStudio,scope.TextBlockStyler}
                 };
                 adornment = new Adornment(adornmentScope);
 
@@ -358,7 +358,7 @@ namespace HideUnobtrusiveCodes
         /// </summary>
         void HandleLayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
         {
-            var adornmentCache = scope.adornmentCache;
+            var adornmentCache = scope.AdornmentCache;
 
             var visibleSpan = view.TextViewLines.FormattedSpan;
 

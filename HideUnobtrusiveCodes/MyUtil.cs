@@ -55,43 +55,12 @@ namespace HideUnobtrusiveCodes
 
         public static void Trace(string message)
         {
-            var indent = string.Empty.PadRight(traceIndent, ' ');
-
-            message = indent + message;
-
             AppendToFile("d:\\trace.txt",message);
         }
 
-        static int traceIndent = 0;
-
-        public static void OpenTraceScope()
-        {
-            traceIndent += 4;
-        }
-
-        public static void CloseTraceScope()
-        {
-            traceIndent -= 4;
-        }
-        public static void Trace(IReadOnlyList<ITagSpan<IntraTextAdornmentTag>> tags)
-        {
-            OpenTraceScope();
-            foreach (var tagSpan in tags)
-            {
-                Trace($"Position: {tagSpan.Span.Start.Position} - {tagSpan.Span.Length}");
-            }
-            CloseTraceScope();
-        }
+      
+       
         
-        public static void Trace(NormalizedSnapshotSpanCollection spans)
-        {
-            OpenTraceScope();
-            foreach (var tagSpan in spans)
-            {
-                Trace($"Position: {tagSpan.Span.Start} - {tagSpan.Span.Length}");
-            }
-            CloseTraceScope();
-        }
 
         #endregion
     }

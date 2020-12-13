@@ -7,18 +7,36 @@ using AdornmentCache = System.Collections.Generic.Dictionary<Microsoft.VisualStu
 
 namespace HideUnobtrusiveCodes
 {
+    /// <summary>
+    ///     The adornment tagger scope
+    /// </summary>
     class AdornmentTaggerScope
     {
-        public List<SnapshotSpan> DisabledSnapshotSpans { get; } = new List<SnapshotSpan>();
-
-        
-        public  Action<TextBox> textBlockStyler{ get; set; }
-        public IWpfTextView WpfTextView{ get; set; }
-        public List<SnapshotSpan> editedSpans { get; } = new List<SnapshotSpan>();
-
+        #region Public Properties
         /// <summary>
         ///     The adornment cache
         /// </summary>
-        public AdornmentCache adornmentCache = new AdornmentCache();
+        public AdornmentCache AdornmentCache { get; set; } = new AdornmentCache();
+
+        /// <summary>
+        ///     Gets the disabled snapshot spans.
+        /// </summary>
+        public List<SnapshotSpan> DisabledSnapshotSpans { get; } = new List<SnapshotSpan>();
+
+        /// <summary>
+        ///     Gets the edited spans.
+        /// </summary>
+        public List<SnapshotSpan> EditedSpans { get; } = new List<SnapshotSpan>();
+
+        /// <summary>
+        ///     Gets or sets the text block styler.
+        /// </summary>
+        public Action<TextBox> TextBlockStyler { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the WPF text view.
+        /// </summary>
+        public IWpfTextView WpfTextView { get; set; }
+        #endregion
     }
 }

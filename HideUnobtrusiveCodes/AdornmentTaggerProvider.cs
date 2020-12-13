@@ -38,7 +38,7 @@ namespace HideUnobtrusiveCodes
             
             var scope = new AdornmentTaggerScope()
             {
-                textBlockStyler = textBlockStyler,
+                TextBlockStyler = textBlockStyler,
                 WpfTextView = (IWpfTextView) textView
             };
 

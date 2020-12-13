@@ -88,9 +88,8 @@
     <Compile Include="CommentIcon.xaml.cs">
       <DependentUpon>CommentIcon.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ConditionType.cs" />
+    <Compile Include="FilePathHelper.cs" />
     <Compile Include="GlobalScopeAccess.cs" />
-    <Compile Include="LineProcessInfo.cs" />
     <Compile Include="Mixin.cs" />
     <Compile Include="MyUtil.cs" />
     <Compile Include="OptionsModel.cs" />

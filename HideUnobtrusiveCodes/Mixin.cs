@@ -163,9 +163,9 @@ namespace HideUnobtrusiveCodes
                 return true;
             }
 
-            if (scope.editedSpans != null)
+            if (scope.EditedSpans != null)
             {
-                if (scope.editedSpans.Any(x => IntersectsWith(x, span)))
+                if (scope.EditedSpans.Any(x => IntersectsWith(x, span)))
                 {
                     return true;
                 }
