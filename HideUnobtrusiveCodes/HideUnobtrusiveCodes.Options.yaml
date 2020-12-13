@@ -1,0 +1,20 @@
+﻿ReplaceWithCommentIconWhenLineStartsWith:
+  - ///
+  - Logger.Log(
+  - Debug.Assert(
+  - Trace.Info(
+HideLineWhenLineStartsWith:
+  - '#region '
+  - '#endregion'
+ReplaceLineWithAnotherTextWhenLineContains:
+  - Value: ' returnObject = objectHelper.InitializeGenericResponse<'
+    NewValue: '[returnObject]'
+  - Value: ' returnObject = this.InitializeResponse<'
+    NewValue: '[returnObject]'
+  - Value: ' returnObject = objectHelper.InitializeResponse<'
+    NewValue: '[returnObject]'
+ReplaceTextRangeWithAnotherText:
+  - Value: (Scope scope)
+    NewValue: '(*)'
+  - Value: (Scope scope,
+    NewValue: '(*,'
