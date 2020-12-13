@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
+using HideUnobtrusiveCodes.Common;
+using HideUnobtrusiveCodes.Dataflow;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
-using static HideUnobtrusiveCodes.Mixin;
-using AdornmentCache = System.Collections.Generic.Dictionary<Microsoft.VisualStudio.Text.SnapshotSpan, HideUnobtrusiveCodes.Adornment>;
+using static HideUnobtrusiveCodes.Common.Mixin;
+using AdornmentCache = System.Collections.Generic.Dictionary<Microsoft.VisualStudio.Text.SnapshotSpan, HideUnobtrusiveCodes.Tagging.Adornment>;
 
-namespace HideUnobtrusiveCodes
+namespace HideUnobtrusiveCodes.Tagging
 {
     /// <summary>
     ///     The adornment tagger
@@ -100,7 +102,7 @@ namespace HideUnobtrusiveCodes
             var requestedSnapshot = spans[0].Snapshot;
 
             var translatedSpans = new NormalizedSnapshotSpanCollection(spans.Select(span => span.TranslateTo(snapshot, SpanTrackingMode.EdgeExclusive)));
-            
+
             // Grab the adornments.
             var tags = new List<ITagSpan<IntraTextAdornmentTag>>();
             foreach (var tagSpan in GetAdornmentTagsOnSnapshot(translatedSpans))
@@ -108,7 +110,7 @@ namespace HideUnobtrusiveCodes
                 // Translate each adornment to the snapshot that the tagger was asked about.
                 var span = tagSpan.Span.TranslateTo(requestedSnapshot, SpanTrackingMode.EdgeExclusive);
 
-                if (IsIntersectWithDisabledSpans(scope,span))
+                if (IsIntersectWithDisabledSpans(scope, span))
                 {
                     continue;
                 }
@@ -117,7 +119,7 @@ namespace HideUnobtrusiveCodes
 
                 tags.Add(new TagSpan<IntraTextAdornmentTag>(span, tag));
             }
-            
+
             return tags;
         }
         #endregion
@@ -190,8 +192,6 @@ namespace HideUnobtrusiveCodes
         /// </summary>
         void AsyncUpdate()
         {
-            
-
             // Store the snapshot that we're now current with and send an event
             // for the text that has changed.
             if (snapshot != view.TextBuffer.CurrentSnapshot)
@@ -224,26 +224,6 @@ namespace HideUnobtrusiveCodes
             RaiseTagsChanged(new SnapshotSpan(start, end));
         }
 
-        void TranslateDisabledSnapshots()
-        {
-
-            TranslateToCurrentSnapshot(scope.DisabledSnapshotSpans);
-            TranslateToCurrentSnapshot(scope.EditedSpans);
-        }
-
-        void TranslateToCurrentSnapshot(List<SnapshotSpan> spans)
-        {
-            if (spans == null)
-            {
-                return;
-            }
-
-            for (var i = 0; i < spans.Count; i++)
-            {
-                spans[i] = spans[i].TranslateTo(view.TextBuffer.CurrentSnapshot, SpanTrackingMode.EdgeExclusive);
-            }
-        }
-
         // Produces tags on the snapshot that this tagger is current with.
         /// <summary>
         ///     Gets the adornment tags on snapshot.
@@ -272,7 +252,7 @@ namespace HideUnobtrusiveCodes
             var toRemove = new HashSet<SnapshotSpan>();
             foreach (var pair in adornmentCache)
             {
-                if (HasIntersection(spans,new NormalizedSnapshotSpanCollection(pair.Key.TranslateTo(snapshot,SpanTrackingMode.EdgeExclusive))))
+                if (HasIntersection(spans, new NormalizedSnapshotSpanCollection(pair.Key.TranslateTo(snapshot, SpanTrackingMode.EdgeExclusive))))
                 {
                     toRemove.Add(pair.Key);
                 }
@@ -312,9 +292,9 @@ namespace HideUnobtrusiveCodes
             {
                 var adornmentScope = new Scope
                 {
-                    {TagModel,tagData},
-                    {Mixin.OnAdornmentClicked,OnAdornmentClicked},
-                    {UpdateTextBoxStyleForVisualStudio,scope.TextBlockStyler}
+                    {TagModel, tagData},
+                    {Mixin.OnAdornmentClicked, OnAdornmentClicked},
+                    {UpdateTextBoxStyleForVisualStudio, scope.TextBlockStyler}
                 };
                 adornment = new Adornment(adornmentScope);
 
@@ -404,6 +384,25 @@ namespace HideUnobtrusiveCodes
         void RaiseTagsChanged(SnapshotSpan span)
         {
             TagsChanged?.Invoke(this, new SnapshotSpanEventArgs(span));
+        }
+
+        void TranslateDisabledSnapshots()
+        {
+            TranslateToCurrentSnapshot(scope.DisabledSnapshotSpans);
+            TranslateToCurrentSnapshot(scope.EditedSpans);
+        }
+
+        void TranslateToCurrentSnapshot(List<SnapshotSpan> spans)
+        {
+            if (spans == null)
+            {
+                return;
+            }
+
+            for (var i = 0; i < spans.Count; i++)
+            {
+                spans[i] = spans[i].TranslateTo(view.TextBuffer.CurrentSnapshot, SpanTrackingMode.EdgeExclusive);
+            }
         }
 
         /// <summary>

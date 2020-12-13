@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
 
-namespace HideUnobtrusiveCodes
+namespace HideUnobtrusiveCodes.Tagging
 {
     /// <summary>
     ///     The tag data
@@ -9,6 +9,8 @@ namespace HideUnobtrusiveCodes
     internal class TagData : ITag
     {
         #region Public Properties
+        public bool ShowCommentIcon { get; set; }
+
         /// <summary>
         ///     The span
         /// </summary>
@@ -18,8 +20,6 @@ namespace HideUnobtrusiveCodes
         ///     Gets the text.
         /// </summary>
         public string Text { get; set; }
-
-        public bool ShowCommentIcon { get; set; }
         #endregion
     }
 }

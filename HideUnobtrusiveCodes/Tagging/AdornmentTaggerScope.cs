@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Windows.Controls;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
-using AdornmentCache = System.Collections.Generic.Dictionary<Microsoft.VisualStudio.Text.SnapshotSpan, HideUnobtrusiveCodes.Adornment>;
+using AdornmentCache = System.Collections.Generic.Dictionary<Microsoft.VisualStudio.Text.SnapshotSpan, HideUnobtrusiveCodes.Tagging.Adornment>;
 
-namespace HideUnobtrusiveCodes
+namespace HideUnobtrusiveCodes.Tagging
 {
     /// <summary>
     ///     The adornment tagger scope

@@ -1,10 +1,13 @@
-﻿using Microsoft.VisualStudio.Text.Tagging;
-using static HideUnobtrusiveCodes.Mixin;
+﻿using HideUnobtrusiveCodes.Dataflow;
+using HideUnobtrusiveCodes.Tagging;
+using Microsoft.VisualStudio.Text.Tagging;
+using static HideUnobtrusiveCodes.Common.Mixin;
 
 namespace HideUnobtrusiveCodes.Processors
 {
     static class HideLineWhenLineStartsWithProcessor
     {
+        #region Public Methods
         public static void ProcessHideLineWhenLineStartsWith(Scope scope)
         {
             var getTextAtLine     = scope.Get(GetTextAtLine);
@@ -17,27 +20,28 @@ namespace HideUnobtrusiveCodes.Processors
 
             var i = currentLineIndex;
 
-            while (LineStartsWith(scope,i, options.HideLineWhenLineStartsWith))
+            while (LineStartsWith(scope, i, options.HideLineWhenLineStartsWith))
             {
                 i++;
-                scope.Update(IsAnyValueProcessed,true);
+                scope.Update(IsAnyValueProcessed, true);
             }
 
             if (!scope.Get(IsAnyValueProcessed))
             {
                 return;
             }
-            
+
             i--; // come back to last successfull line
-            
+
             var span = HideLines(textSnapshotLines, currentLineIndex, i);
 
             var tag = new TagData {Span = span};
-            
+
             addTagSpan(new TagSpan<TagData>(span, tag));
 
             // focus to next not processed position
-            scope.Update(CurrentLineIndex,i+1);
+            scope.Update(CurrentLineIndex, i + 1);
         }
+        #endregion
     }
 }

@@ -1,40 +1,13 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Windows.Controls;
-using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
-using Microsoft.VisualStudio.Text.Editor;
-using Microsoft.VisualStudio.Text.Tagging;
 
-namespace HideUnobtrusiveCodes
+namespace HideUnobtrusiveCodes.Common
 {
     class MyUtil
     {
-        #region Public Methods        
-        /// <summary>
-        /// Gets the text block styler.
-        /// </summary>
-        public static Action<TextBox> GetTextBlockStyler(IEditorFormatMap editorFormatMap)
-        {
-            return textblock => ApplyStyle(editorFormatMap, textblock);
-        }
-
-        public static void ApplyStyle(IEditorFormatMap editorFormatMap, TextBox textBlock)
-        {
-            var typeface = editorFormatMap.GetTypeface();
-            var fontSize = editorFormatMap.GetFontSize();
-            if (typeface != null)
-            {
-                //Set format for text block
-                textBlock.FontFamily  = typeface.FontFamily;
-                textBlock.FontStyle   = typeface.Style;
-                textBlock.FontStretch = typeface.Stretch;
-                textBlock.FontWeight  = typeface.Weight;
-                textBlock.FontSize    = fontSize;
-            }
-        }
-
+        #region Public Methods
         public static void AppendToFile(string filePath, string message)
         {
             try
@@ -53,15 +26,33 @@ namespace HideUnobtrusiveCodes
             }
         }
 
-        public static void Trace(string message)
+        public static void ApplyStyle(IEditorFormatMap editorFormatMap, TextBox textBlock)
         {
-            AppendToFile("d:\\trace.txt",message);
+            var typeface = editorFormatMap.GetTypeface();
+            var fontSize = editorFormatMap.GetFontSize();
+            if (typeface != null)
+            {
+                //Set format for text block
+                textBlock.FontFamily  = typeface.FontFamily;
+                textBlock.FontStyle   = typeface.Style;
+                textBlock.FontStretch = typeface.Stretch;
+                textBlock.FontWeight  = typeface.Weight;
+                textBlock.FontSize    = fontSize;
+            }
         }
 
-      
-       
-        
+        /// <summary>
+        ///     Gets the text block styler.
+        /// </summary>
+        public static Action<TextBox> GetTextBlockStyler(IEditorFormatMap editorFormatMap)
+        {
+            return textblock => ApplyStyle(editorFormatMap, textblock);
+        }
 
+        public static void Trace(string message)
+        {
+            AppendToFile("d:\\trace.txt", message);
+        }
         #endregion
     }
 }

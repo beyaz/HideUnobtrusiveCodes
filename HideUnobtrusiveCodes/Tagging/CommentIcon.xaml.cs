@@ -1,8 +1,7 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace HideUnobtrusiveCodes
+namespace HideUnobtrusiveCodes.Tagging
 {
     /// <summary>
     ///     Interaction logic for CommentIcon.xaml

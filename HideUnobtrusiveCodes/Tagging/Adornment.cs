@@ -1,8 +1,10 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using HideUnobtrusiveCodes.Common;
+using HideUnobtrusiveCodes.Dataflow;
 
-namespace HideUnobtrusiveCodes
+namespace HideUnobtrusiveCodes.Tagging
 {
     /// <summary>
     ///     The color adornment

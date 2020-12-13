@@ -1,7 +1,9 @@
 ﻿using System;
+using HideUnobtrusiveCodes.Dataflow;
+using HideUnobtrusiveCodes.Tagging;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
-using static HideUnobtrusiveCodes.Mixin;
+using static HideUnobtrusiveCodes.Common.Mixin;
 
 namespace HideUnobtrusiveCodes.Processors
 {
@@ -35,7 +37,7 @@ namespace HideUnobtrusiveCodes.Processors
                     // focus to next not processed position
                     scope.Update(CurrentLineIndex, currentLineIndex + 1);
 
-                    scope.Update(IsAnyValueProcessed,true);
+                    scope.Update(IsAnyValueProcessed, true);
 
                     return;
                 }

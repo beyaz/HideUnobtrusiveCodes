@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using HideUnobtrusiveCodes.Dataflow;
+using HideUnobtrusiveCodes.Tagging;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
-using static HideUnobtrusiveCodes.Mixin;
-
+using static HideUnobtrusiveCodes.Common.Mixin;
 
 namespace HideUnobtrusiveCodes.Processors
 {
@@ -33,10 +32,9 @@ namespace HideUnobtrusiveCodes.Processors
                 return;
             }
 
-            scope.Update(IsAnyValueProcessed,true);
+            scope.Update(IsAnyValueProcessed, true);
 
             i--; // come back to last successfull line
-
 
             var indexOfFirstChar = GetFirstCharIndexHasValue(getTextAtLine(startLineIndex));
 
@@ -50,12 +48,12 @@ namespace HideUnobtrusiveCodes.Processors
 
             var label = "var " + string.Join(" | ", variableNames) + " < *;";
 
-            var tag = new TagData{Text = label,Span = span};
+            var tag = new TagData {Text = label, Span = span};
 
             scope.Get(AddTagSpan)(new TagSpan<TagData>(span, tag));
 
             // focus to next not processed position
-            scope.Update(CurrentLineIndex,i+1);
+            scope.Update(CurrentLineIndex, i + 1);
 
             variableNames.Clear();
         }

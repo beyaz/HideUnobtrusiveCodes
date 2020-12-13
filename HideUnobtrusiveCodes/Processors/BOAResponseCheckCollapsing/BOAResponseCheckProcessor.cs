@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Text;
+using HideUnobtrusiveCodes.Dataflow;
+using HideUnobtrusiveCodes.Tagging;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
 using static System.String;
-using static HideUnobtrusiveCodes.Mixin;
+using static HideUnobtrusiveCodes.Common.Mixin;
 
-namespace HideUnobtrusiveCodes.BOAResponseCheckCollapsing
+namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
 {
     /// <summary>
     ///     The boa response check processor

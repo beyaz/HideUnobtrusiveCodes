@@ -1,7 +1,7 @@
 using System.Windows.Media;
 using Microsoft.VisualStudio.Text.Classification;
 
-namespace HideUnobtrusiveCodes
+namespace HideUnobtrusiveCodes.Common
 {
     static class EditFormatMapHelper
     {

@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using HideUnobtrusiveCodes.BOAResponseCheckCollapsing;
+using HideUnobtrusiveCodes.Dataflow;
 using HideUnobtrusiveCodes.Processors;
+using HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
-using static HideUnobtrusiveCodes.GlobalScopeAccess;
-using static HideUnobtrusiveCodes.Mixin;
+using static HideUnobtrusiveCodes.Tagging.GlobalScopeAccess;
+using static HideUnobtrusiveCodes.Common.Mixin;
 
-namespace HideUnobtrusiveCodes
+namespace HideUnobtrusiveCodes.Tagging
 {
     sealed class Tagger : ITagger<TagData>
     {

@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.Utilities;
 
-namespace HideUnobtrusiveCodes
+namespace HideUnobtrusiveCodes.Tagging
 {
     [Export(typeof(ITaggerProvider))]
     [ContentType("CSharp")]
@@ -18,7 +18,6 @@ namespace HideUnobtrusiveCodes
             {
                 throw new ArgumentNullException("buffer");
             }
-            
 
             return buffer.Properties.GetOrCreateSingletonProperty(() => new Tagger(buffer)) as ITagger<T>;
         }

@@ -1,9 +1,8 @@
-using System;
 using System.IO;
 using YamlDotNet.Serialization;
-using static HideUnobtrusiveCodes.FilePathHelper;
+using static HideUnobtrusiveCodes.Common.FilePathHelper;
 
-namespace HideUnobtrusiveCodes
+namespace HideUnobtrusiveCodes.Common
 {
     /// <summary>
     ///     The options reader
@@ -16,7 +15,6 @@ namespace HideUnobtrusiveCodes
         /// </summary>
         static OptionsModel instance;
         #endregion
-        
 
         #region Public Methods
         /// <summary>

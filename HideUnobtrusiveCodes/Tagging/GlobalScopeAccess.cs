@@ -1,4 +1,6 @@
-﻿namespace HideUnobtrusiveCodes
+﻿using HideUnobtrusiveCodes.Common;
+
+namespace HideUnobtrusiveCodes.Tagging
 {
     /// <summary>
     ///     The global scope access

@@ -1,6 +1,8 @@
-﻿using Microsoft.VisualStudio.Text;
+﻿using HideUnobtrusiveCodes.Dataflow;
+using HideUnobtrusiveCodes.Tagging;
+using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
-using static HideUnobtrusiveCodes.Mixin;
+using static HideUnobtrusiveCodes.Common.Mixin;
 
 namespace HideUnobtrusiveCodes.Processors
 {
@@ -18,7 +20,7 @@ namespace HideUnobtrusiveCodes.Processors
             {
                 if (LineContains(scope, currentLineIndex, item.Value))
                 {
-                    scope.Update(IsAnyValueProcessed,true);
+                    scope.Update(IsAnyValueProcessed, true);
 
                     var indexOfFirstChar = GetFirstCharIndexHasValue(getTextAtLine(currentLineIndex));
 

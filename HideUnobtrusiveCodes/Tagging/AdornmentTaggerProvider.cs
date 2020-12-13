@@ -1,13 +1,13 @@
 using System;
 using System.ComponentModel.Composition;
-using System.Windows.Controls;
+using HideUnobtrusiveCodes.Common;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.Utilities;
 
-namespace HideUnobtrusiveCodes
+namespace HideUnobtrusiveCodes.Tagging
 {
     [Export(typeof(IViewTaggerProvider))]
     [ContentType("CSharp")]
@@ -32,14 +32,14 @@ namespace HideUnobtrusiveCodes
                 return null;
             }
 
-            Action<TextBox> textBlockStyler = MyUtil.GetTextBlockStyler(FormatMapService.GetEditorFormatMap(textView));
+            var textBlockStyler = MyUtil.GetTextBlockStyler(FormatMapService.GetEditorFormatMap(textView));
 
             // FormatMapService.GetEditorFormatMap("text").GetProperties("Comment")["ForegroundColor"]
-            
-            var scope = new AdornmentTaggerScope()
+
+            var scope = new AdornmentTaggerScope
             {
                 TextBlockStyler = textBlockStyler,
-                WpfTextView = (IWpfTextView) textView
+                WpfTextView     = (IWpfTextView) textView
             };
 
             ITagAggregator<TagData> CreateTagAggregator()
@@ -47,9 +47,10 @@ namespace HideUnobtrusiveCodes
                 AdornmentTagger.scopeStatic = scope;
                 var value = BufferTagAggregatorFactoryService.CreateTagAggregator<TagData>(textView.TextBuffer);
                 AdornmentTagger.scopeStatic = null;
-                
+
                 return value;
             }
+
             return AdornmentTagger.GetTagger(new Lazy<ITagAggregator<TagData>>(CreateTagAggregator), scope) as ITagger<T>;
         }
         #endregion

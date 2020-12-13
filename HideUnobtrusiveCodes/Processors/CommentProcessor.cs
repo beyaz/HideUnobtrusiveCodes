@@ -1,6 +1,8 @@
-﻿using Microsoft.VisualStudio.Text;
+﻿using HideUnobtrusiveCodes.Dataflow;
+using HideUnobtrusiveCodes.Tagging;
+using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
-using static HideUnobtrusiveCodes.Mixin;
+using static HideUnobtrusiveCodes.Common.Mixin;
 
 namespace HideUnobtrusiveCodes.Processors
 {
