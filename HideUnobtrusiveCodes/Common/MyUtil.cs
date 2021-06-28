@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Windows.Controls;
+using HideUnobtrusiveCodes.Tagging;
 using Microsoft.VisualStudio.Text.Classification;
 
 namespace HideUnobtrusiveCodes.Common
@@ -63,8 +64,19 @@ namespace HideUnobtrusiveCodes.Common
         /// </summary>
         public static void Trace(string message)
         {
-            AppendToFile("d:\\trace.txt", message);
+            TraceInternal(message);
+        }
+        
+        public static void Log(Exception e)
+        {
+            TraceInternal(e.ToString());
+        }
+
+        static void TraceInternal(string message)
+        {
+            AppendToFile(FilePathHelper.GetFileFullPath("trace.txt"), message);
         }
         #endregion
     }
+    
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
+using FunctionalPrograming;
 using HideUnobtrusiveCodes.Dataflow;
 using HideUnobtrusiveCodes.Processors;
 using Microsoft.VisualStudio.Text;
@@ -186,7 +187,7 @@ namespace HideUnobtrusiveCodes.Tagging
 
                 adornment.Data.Span = key;
 
-                translatedAdornmentCache.Add(key, adornment);
+                translatedAdornmentCache.AddOrUpdate(key, adornment);
             }
 
             return translatedAdornmentCache;

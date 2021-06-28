@@ -1,7 +1,6 @@
-﻿using System;
-using System.Linq;
-using HideUnobtrusiveCodes.Common;
+﻿using System.Linq;
 using Microsoft.VisualStudio.Text;
+using static HideUnobtrusiveCodes.Application.App;
 
 namespace HideUnobtrusiveCodes.Tagging
 {
@@ -16,16 +15,7 @@ namespace HideUnobtrusiveCodes.Tagging
         /// </summary>
         public static bool HasIntersection(NormalizedSnapshotSpanCollection a, NormalizedSnapshotSpanCollection b)
         {
-            try
-            {
-                return a.IntersectsWith(b);
-            }
-            catch (Exception e)
-            {
-                MyUtil.Trace(e.ToString());
-            }
-
-            return false;
+            return SafeExecute(() => a.IntersectsWith(b));
         }
 
         /// <summary>
@@ -56,19 +46,13 @@ namespace HideUnobtrusiveCodes.Tagging
         /// </summary>
         static bool IntersectsWith(SnapshotSpan a, SnapshotSpan b)
         {
-            try
+            return SafeExecute(() =>
             {
                 a = ToLine(a);
                 b = ToLine(b);
 
                 return a.IntersectsWith(b);
-            }
-            catch (Exception e)
-            {
-                MyUtil.Trace(e.ToString());
-            }
-
-            return false;
+            });
         }
 
         /// <summary>

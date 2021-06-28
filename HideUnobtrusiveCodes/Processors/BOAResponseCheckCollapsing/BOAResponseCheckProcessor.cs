@@ -116,16 +116,19 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
                 return;
             }
 
-            scope.Update(Cursor, scope.Get(Cursor) - 1);
+            MoveBackCursor(scope);
 
             {
-                var span = new SnapshotSpan(textSnapshotLines[currentLineIndex].Start.SkipChars(' '), textSnapshotLines[scope.Get(Cursor)].End);
-                var tag  = new TagData {Text = responseAssignmentLine.AssignedValue + ";", Span = span};
+                var start = textSnapshotLines[currentLineIndex].Start.SkipChars(' ');
+                var end   = textSnapshotLines[scope.Get(Cursor)].End;
+
+                var span = new SnapshotSpan(start, end);
+                var tag = new TagData {Text = responseAssignmentLine.AssignedValue + ";", Span = span};
 
                 addTagSpan(new TagSpan<TagData>(span, tag));
             }
 
-            scope.Update(Keys.CurrentLineIndex, scope.Get(Cursor) + 1);
+            scope.Update(Keys.CurrentLineIndex, scope.Get(Cursor) +1);
             scope.Update(Keys.IsAnyValueProcessed, true);
         }
 
@@ -178,6 +181,30 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
                 if (IsEmptyOrCommentLine(textAtLine))
                 {
                     cursor++;
+                    continue;
+                }
+
+                break;
+            }
+
+            scope.Update(Cursor, cursor);
+        }
+
+        /// <summary>
+        ///     Moves the cursor.
+        /// </summary>
+        static void MoveBackCursor(Scope scope)
+        {
+            var getTextAtLine = scope.Get(Keys.GetTextAtLine);
+            var cursor        = scope.Get(Cursor) -1;
+
+            while (cursor > 0)
+            {
+                var textAtLine = getTextAtLine(cursor)?.Trim();
+
+                if (IsEmptyOrCommentLine(textAtLine))
+                {
+                    cursor--;
                     continue;
                 }
 

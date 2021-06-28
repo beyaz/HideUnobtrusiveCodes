@@ -59,6 +59,11 @@ namespace HideUnobtrusiveCodes.Common
         /// </summary>
         public static bool LineStartsWith(Scope scope, int lineIndex, string[] values)
         {
+            if (values == null)
+            {
+                return false;
+            }
+
             var getTextAtLine = scope.Get(Keys.GetTextAtLine);
 
             var line = getTextAtLine(lineIndex);
@@ -71,7 +76,7 @@ namespace HideUnobtrusiveCodes.Common
 
             foreach (var value in values)
             {
-                if (line.StartsWith(value))
+                if (line?.StartsWith(value) == true)
                 {
                     return true;
                 }

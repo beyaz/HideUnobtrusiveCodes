@@ -149,3 +149,19 @@
     var b = scope.Get("Aloha");
     var c = scope.Get("Aloha");
     Scope Assignments End
+    
+    Begin Should see one empty line
+    var pushResponse = PushPersonData(objectHelper, request, map);
+    if (!pushResponse.Success)
+    {
+        returnObject.Results.AddRange(pushResponse.Results);
+        return returnObject;
+    }
+
+    pushResponse = PushCustomerData(objectHelper, request, map);
+    if (!pushResponse.Success)
+    {
+        returnObject.Results.AddRange(pushResponse.Results);
+        return returnObject;
+    }
+    End

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.IO;
 
 namespace HideUnobtrusiveCodes.Common
@@ -13,7 +14,20 @@ namespace HideUnobtrusiveCodes.Common
         /// </summary>
         public static string GetFileFullPath(string fileName)
         {
-            return Path.GetDirectoryName(typeof(FilePathHelper).Assembly.Location) + Path.DirectorySeparatorChar + fileName;
+            return Path.GetDirectoryName(WorkingDirectory) + Path.DirectorySeparatorChar + fileName;
+        }
+
+        static string WorkingDirectory
+        {
+            get
+            {
+                if (Process.GetCurrentProcess().ProcessName == "ApiInspector")
+                {
+                    return @"D:\git\HideUnobtrusiveCodes\HideUnobtrusiveCodes\bin\Debug\";
+                }
+                return  typeof(FilePathHelper).Assembly.Location;
+
+            }
         }
         #endregion
     }

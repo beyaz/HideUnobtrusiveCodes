@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.Utilities;
+using static HideUnobtrusiveCodes.Application.App;
 
 namespace HideUnobtrusiveCodes.Tagging
 {
@@ -23,6 +24,8 @@ namespace HideUnobtrusiveCodes.Tagging
         /// </summary>
         public ITagger<T> CreateTagger<T>(ITextView textView, ITextBuffer buffer) where T : ITag
         {
+            Trace(nameof(CreateTagger));
+
             if (textView == null)
             {
                 throw new ArgumentNullException("textView");

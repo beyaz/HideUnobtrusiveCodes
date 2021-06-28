@@ -6,6 +6,9 @@ namespace HideUnobtrusiveCodes.Options
     public class OptionsModel
     {
         #region Public Properties
+
+        public bool LogEnabled { get; set; }
+
         /// <summary>
         ///     Gets or sets the hide line when line starts with.
         /// </summary>

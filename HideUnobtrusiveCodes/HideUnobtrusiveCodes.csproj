@@ -83,6 +83,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application\App.cs" />
+    <Compile Include="FunctionalProgramingExtensions.cs" />
     <Compile Include="Tagging\Mixin.cs" />
     <Compile Include="Processors\Keys.cs" />
     <Compile Include="Options\OldNewPair.cs" />
