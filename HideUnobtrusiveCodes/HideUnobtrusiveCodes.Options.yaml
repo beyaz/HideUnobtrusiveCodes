@@ -1,4 +1,4 @@
-﻿LogEnabled: true
+﻿LogEnabled: false
 ReplaceWithCommentIconWhenLineStartsWith:
   - ///
   - Logger.Log(
