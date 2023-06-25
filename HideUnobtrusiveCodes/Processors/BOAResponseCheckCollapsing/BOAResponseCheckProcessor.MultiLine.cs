@@ -4,18 +4,25 @@ using HideUnobtrusiveCodes.Common;
 
 namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
 {
-    /// <summary>
-    ///     The boa response check processor
-    /// </summary>
     static class BOAResponseCheckProcessorMultiline
     {
-        public static (bool isFound, int variableAssingmentLineIndex, int endIndex, string responseVariableName)
+        public static
+            (bool isFound,
+            int variableAssingmentLineIndex,
+            int endIndex,
+            string responseVariableName,
+            bool hasVarDecleration)
             ProcessMultiLine(IReadOnlyList<string> lines, int startIndex)
         {
             return ProcessMultiLine(startIndex, i => i < lines.Count, i => lines[i]);
         }
 
-        public static (bool isFound, int variableAssingmentLineIndex, int endIndex, string responseVariableName)
+        public static
+            (bool isFound,
+            int variableAssingmentLineIndex,
+            int endIndex,
+            string responseVariableName,
+            bool hasVarDecleration)
             ProcessMultiLine(int startIndex, Func<int, bool> canAccessLineAt, Func<int, string> readLineAt)
         {
             var defaultPadding = "    ";
@@ -27,7 +34,7 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
 
             var successCheckLine = readLineAt(startIndex);
 
-            var spaceCount = successCheckLine.IndexOf(c => !char.IsWhiteSpace(c));
+            var spaceCount = GetSpaceLengthInFront(successCheckLine);
             if (spaceCount < 4)
             {
                 return default;
@@ -51,11 +58,25 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
 
                                 var cursor = startIndex - 1;
 
+                                var hasVarDecleration = false;
+
                                 while (canAccessLineAt(cursor))
                                 {
                                     if (lineHasMatch(cursor, line => line.StartsWith(padding + $"var {responseVariableName} = ")))
                                     {
+                                        hasVarDecleration    = true;
                                         callerStartLineIndex = cursor;
+                                        break;
+                                    }
+
+                                    if (lineHasMatch(cursor, line => line.StartsWith(padding + $"{responseVariableName} = ")))
+                                    {
+                                        callerStartLineIndex = cursor;
+                                        break;
+                                    }
+
+                                    if (GetSpaceLengthInFront(readLineAt(cursor)) != spaceCount)
+                                    {
                                         break;
                                     }
 
@@ -67,7 +88,14 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
                                     return default;
                                 }
 
-                                return (isFound: true, variableAssingmentLineIndex: cursor, endIndex: startIndex + 4, responseVariableName);
+                                return
+                                (
+                                    isFound: true,
+                                    variableAssingmentLineIndex: cursor,
+                                    endIndex: startIndex + 4,
+                                    responseVariableName,
+                                    hasVarDecleration
+                                );
                             }
                         }
                     }
@@ -85,6 +113,11 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
 
                 return false;
             }
+        }
+
+        static int GetSpaceLengthInFront(string line)
+        {
+            return line.IndexOf(c => !char.IsWhiteSpace(c));
         }
     }
 }
