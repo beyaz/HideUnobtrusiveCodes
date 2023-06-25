@@ -7,7 +7,7 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
     /// <summary>
     ///     The boa response check processor
     /// </summary>
-    partial class BOAResponseCheckProcessor
+    static class BOAResponseCheckProcessorMultiline
     {
         public static (bool isFound, int variableAssingmentLineIndex, int endIndex, string responseVariableName)
             ProcessMultiLine(IReadOnlyList<string> lines, int startIndex)

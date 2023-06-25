@@ -12,7 +12,7 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
     /// <summary>
     ///     The boa response check processor
     /// </summary>
-    static partial class BOAResponseCheckProcessor
+    static class BOAResponseCheckProcessor
     {
         #region Static Fields
         /// <summary>
