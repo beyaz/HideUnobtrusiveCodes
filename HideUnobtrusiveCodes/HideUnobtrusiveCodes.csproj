@@ -86,6 +86,7 @@
   <ItemGroup>
     <Compile Include="Application\App.cs" />
     <Compile Include="FunctionalProgramingExtensions.cs" />
+    <Compile Include="Processors\BOAResponseCheckCollapsing\BOAResponseCheckProcessor.MultiLine.cs" />
     <Compile Include="Tagging\Mixin.cs" />
     <Compile Include="Processors\Keys.cs" />
     <Compile Include="Options\OldNewPair.cs" />
