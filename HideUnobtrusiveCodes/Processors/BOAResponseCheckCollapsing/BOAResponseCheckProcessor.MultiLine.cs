@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using HideUnobtrusiveCodes.Common;
+using YamlDotNet.Serialization;
 
 namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
 {
@@ -65,7 +66,7 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
                                 // go upper
                                 while (canAccessLineAt(cursor))
                                 {
-                                    if (lineHasMatch(cursor, line => line.StartsWith(padding + $"var {responseVariableName} = ")))
+                                    if (lineHasMatch(cursor, line => line?.StartsWith(padding + $"var {responseVariableName} = ")==true))
                                     {
                                         hasVarDecleration    = true;
                                         callerStartLineIndex = cursor;
@@ -113,7 +114,8 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
                                     break;
                                 }
 
-
+                                int? endIndex = null;
+                                
                                 string finalValType = null;
                                 string finalValName = null;
                                 string finalValExtension = null;
@@ -139,6 +141,8 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
                                             {
                                                 finalValExtension = null;
                                             }
+
+                                            endIndex = cursorForDown;
                                         }
                                     }
                                 }
@@ -180,7 +184,7 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
                                         }
                                     }
                                     
-                                    sb.AppendLine(readLineAt(i));
+                                    sb.AppendLine(readLineAt(i).RemoveFromStart(padding));
                                     
                                 }
 
@@ -188,7 +192,7 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
                                 {
                                     isFound                     = true,
                                     variableAssingmentLineIndex = cursor,
-                                    endIndex                    = startIndex + 4,
+                                    endIndex                    = cursorForDown == null ? startIndex + 4: endIndex.Value,
                                     responseVariableName        = responseVariableName,
                                     hasVarDecleration           = hasVarDecleration,
                                     summary                     = sb.ToString().Trim(),
