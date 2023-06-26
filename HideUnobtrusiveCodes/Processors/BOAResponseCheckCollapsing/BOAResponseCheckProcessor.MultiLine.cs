@@ -23,7 +23,7 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
     {
         public static MultilineProcessOutput ProcessMultiLine(IReadOnlyList<string> lines, int startIndex)
         {
-            return ProcessMultiLine(startIndex, i => i < lines.Count, i => lines[i]);
+            return ProcessMultiLine(startIndex, i => i>=0 && i < lines.Count, i => lines[i]);
         }
 
         public static MultilineProcessOutput ProcessMultiLine(int startIndex, Func<int, bool> canAccessLineAt, Func<int, string> readLineAt)
