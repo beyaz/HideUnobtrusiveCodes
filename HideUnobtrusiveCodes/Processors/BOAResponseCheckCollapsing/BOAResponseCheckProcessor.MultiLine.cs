@@ -31,6 +31,8 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
             // cursor for newt line
             var downCursor = startIndex;
             
+            var upCursor = startIndex - 1;
+            
             var defaultPadding = "    ";
 
             if (!canAccessLineAt(downCursor))
