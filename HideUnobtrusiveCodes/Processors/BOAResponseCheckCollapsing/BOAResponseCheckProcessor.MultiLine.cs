@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using HideUnobtrusiveCodes.Common;
 
@@ -13,6 +14,9 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
         public string responseVariableName { get; set; }
         public string summary { get; set; }
         public int variableAssingmentLineIndex { get; set; }
+        public string finalValType { get; set; }
+        public string finalValName { get; set; }
+        public string finalValExtension { get; set; }
     }
 
     static class BOAResponseCheckProcessorMultiline
@@ -59,6 +63,7 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
 
                                 var hasVarDecleration = false;
 
+                                // go upper
                                 while (canAccessLineAt(cursor))
                                 {
                                     if (lineHasMatch(cursor, line => line.StartsWith(padding + $"var {responseVariableName} = ")))
@@ -92,11 +97,92 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
                                 {
                                     return default;
                                 }
+                                
+                                // go down
+                                var cursorForDown = startIndex + 5;
+                                
+                                // skip empty and comment lines
+                                while (canAccessLineAt(cursorForDown))
+                                {
+                                    var isCommment = lineHasMatch(cursorForDown, line => line?.TrimStart().StartsWith("//") == true);
+                                    var isEmptyLine = lineHasMatch(cursorForDown, string.IsNullOrWhiteSpace);
+                                    if (isCommment || isEmptyLine)
+                                    {
+                                        cursorForDown++;
+                                        continue;
+                                    }
+                                    break;
+                                }
+
+
+                                string finalValType = null;
+                                string finalValName = null;
+                                string finalValExtension = null;
+                                
+                                if (canAccessLineAt(cursorForDown))
+                                {
+                                    var line = readLineAt(cursorForDown);
+
+                                    var index = line.IndexOf($"= {responseVariableName}.Value", StringComparison.OrdinalIgnoreCase);
+                                    if (index > 0)
+                                    {
+                                        var result = line.Substring(0, index).Trim();
+
+                                        var firstSpaceIndex = result.IndexOf(' ');
+                                        if (firstSpaceIndex > 1)
+                                        {
+                                            finalValType = result.Substring(0, firstSpaceIndex);
+
+                                            finalValName = result.Substring(firstSpaceIndex).Trim();
+                                            
+                                            finalValExtension = line.Substring(index + $"= {responseVariableName}.Value".Length);
+                                            if (finalValExtension==";")
+                                            {
+                                                finalValExtension = null;
+                                            }
+                                        }
+                                    }
+                                }
+                                
 
                                 var sb = new StringBuilder();
                                 for (var i = cursor; i < startIndex; i++)
                                 {
+                                    if (i == cursor)
+                                    {
+                                        if (finalValType != null)
+                                        {
+                                            sb.Append(finalValType);
+                                            sb.Append(" ");
+                                        }
+                                        
+                                        if (finalValName != null)
+                                        {
+                                            sb.Append(finalValName);
+                                        }
+
+                                        sb.Append(" = ");
+                                        
+                                        sb.AppendLine(readLineAt(i)
+                                                          .RemoveFromStart(padding + responseVariableName + " = ")
+                                                          .RemoveFromStart(padding + "var "+responseVariableName + " = "));
+                                        continue;
+                                    }
+
+                                    
+                                    
+                                    
+                                    if (i == startIndex-1)
+                                    {
+                                        if (finalValExtension != null)
+                                        {
+                                            sb.AppendLine(readLineAt(i).RemoveFromEnd(";") + finalValExtension);
+                                            continue;
+                                        }
+                                    }
+                                    
                                     sb.AppendLine(readLineAt(i));
+                                    
                                 }
 
                                 return new MultilineProcessOutput
@@ -106,7 +192,11 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
                                     endIndex                    = startIndex + 4,
                                     responseVariableName        = responseVariableName,
                                     hasVarDecleration           = hasVarDecleration,
-                                    summary                     = sb.ToString().Trim()
+                                    summary                     = sb.ToString().Trim(),
+                                    
+                                    finalValType =finalValType, 
+                                    finalValName = finalValName, 
+                                    finalValExtension = finalValExtension
                                 };
                             }
                         }

@@ -97,34 +97,13 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
             var response = BOAResponseCheckProcessorMultiline.ProcessMultiLine(currentLineIndex, i => i < lineCount, getTextAtLine);
             if (response?.isFound == true)
             {
-                var sb = new StringBuilder();
-
-                if (response.hasVarDecleration)
-                {
-                    sb.Append("var ");
-                }
-
-                sb.Append(response.responseVariableName);
-
-                sb.Append(" = ");
-
-                sb.Append(getTextAtLine(response.variableAssingmentLineIndex));
-
-                for (var i = response.variableAssingmentLineIndex + 1; i < currentLineIndex; i++)
-                {
-                    sb.AppendLine("    " + getTextAtLine(i));
-                }
-                sb.Append("});");
-
                 var span = new SnapshotSpan(textSnapshotLines[currentLineIndex].Start.SkipChars(' '), textSnapshotLines[response.endIndex].End);
-                var tag  = new TagData {Text = sb.ToString(), Span = span};
+                var tag  = new TagData {Text = response.summary, Span = span};
 
                 addTagSpan(new TagSpan<TagData>(span, tag));
 
                 scope.Update(Keys.CurrentLineIndex, response.endIndex + 1);
                 scope.Update(Keys.IsAnyValueProcessed, true);
-
-                return;
                 
             }
             

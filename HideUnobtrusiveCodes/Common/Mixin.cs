@@ -66,7 +66,7 @@ namespace HideUnobtrusiveCodes.Common
 
             return requestedLine =>
             {
-                if (requestedLine < length)
+                if (requestedLine >= 0 && requestedLine < length)
                 {
                     return lines[requestedLine].GetText();
                 }
