@@ -66,6 +66,11 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
                                 // go upper
                                 while (canAccessLineAt(cursor))
                                 {
+                                    if (lineHasMatch(cursor,string.IsNullOrWhiteSpace))
+                                    {
+                                        cursor--;
+                                        continue;
+                                    }
                                     if (lineHasMatch(cursor, line => line?.StartsWith(padding + $"var {responseVariableName} = ")==true))
                                     {
                                         hasVarDecleration    = true;
@@ -151,6 +156,11 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
                                 var sb = new StringBuilder();
                                 for (var i = cursor; i < startIndex; i++)
                                 {
+                                    if (string.IsNullOrWhiteSpace(readLineAt(i)))
+                                    {
+                                        continue;
+                                    }
+                                    
                                     if (i == cursor)
                                     {
                                         if (finalValType != null)
