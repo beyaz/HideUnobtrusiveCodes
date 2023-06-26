@@ -28,14 +28,17 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
 
         public static MultilineProcessOutput ProcessMultiLine(int startIndex, Func<int, bool> canAccessLineAt, Func<int, string> readLineAt)
         {
+            // cursor for newt line
+            var downCursor = startIndex;
+            
             var defaultPadding = "    ";
 
-            if (!canAccessLineAt(startIndex))
+            if (!canAccessLineAt(downCursor))
             {
                 return default;
             }
 
-            var successCheckLine = readLineAt(startIndex);
+            var successCheckLine = readLineAt(downCursor);
 
             var spaceCount = GetSpaceLengthInFront(successCheckLine);
             if (spaceCount < 4)
@@ -49,13 +52,18 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
             {
                 var responseVariableName = successCheckLine.Trim().RemoveFromStart("if (!").RemoveFromEnd(".Success)");
 
-                if (readLineAt(startIndex + 1) == padding + "{")
+                downCursor++;
+                
+                if (readLineAt(downCursor) == padding + "{")
                 {
-                    if (lineHasMatch(startIndex + 2, x => x == padding + defaultPadding + $"returnObject.Results.AddRange({responseVariableName}.Results);"))
+                    downCursor++;
+                    if (lineHasMatch(downCursor, x => x == padding + defaultPadding + $"returnObject.Results.AddRange({responseVariableName}.Results);"))
                     {
-                        if (lineHasMatch(startIndex + 3, x => x == padding + defaultPadding + "return returnObject;"))
+                        downCursor++;
+                        if (lineHasMatch(downCursor, x => x == padding + defaultPadding + "return returnObject;"))
                         {
-                            if (lineHasMatch(startIndex + 4, x => x == padding + "}"))
+                            downCursor++;
+                            if (lineHasMatch(downCursor, x => x == padding + "}"))
                             {
                                 var callerStartLineIndex = -1;
 
