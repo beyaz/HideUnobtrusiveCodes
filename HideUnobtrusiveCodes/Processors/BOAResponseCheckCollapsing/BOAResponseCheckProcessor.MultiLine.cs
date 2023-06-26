@@ -5,24 +5,24 @@ using HideUnobtrusiveCodes.Common;
 
 namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
 {
+    class MultilineProcessOutput
+    {
+        public int endIndex { get; set; }
+        public bool hasVarDecleration { get; set; }
+        public bool isFound { get; set; }
+        public string responseVariableName { get; set; }
+        public string summary { get; set; }
+        public int variableAssingmentLineIndex { get; set; }
+    }
+
     static class BOAResponseCheckProcessorMultiline
     {
-        public static
-            (bool isFound,
-            int variableAssingmentLineIndex,
-            int endIndex,
-            string responseVariableName,
-            bool hasVarDecleration,
-            string summary)
-            ProcessMultiLine(IReadOnlyList<string> lines, int startIndex)
+        public static MultilineProcessOutput ProcessMultiLine(IReadOnlyList<string> lines, int startIndex)
         {
             return ProcessMultiLine(startIndex, i => i < lines.Count, i => lines[i]);
         }
 
-        public static
-            (bool isFound, int variableAssingmentLineIndex, int endIndex, string responseVariableName, 
-            bool hasVarDecleration, string summary)
-            ProcessMultiLine(int startIndex, Func<int, bool> canAccessLineAt, Func<int, string> readLineAt)
+        public static MultilineProcessOutput ProcessMultiLine(int startIndex, Func<int, bool> canAccessLineAt, Func<int, string> readLineAt)
         {
             var defaultPadding = "    ";
 
@@ -79,7 +79,7 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
                                         cursor--;
                                         continue;
                                     }
-                                    
+
                                     if (GetSpaceLengthInFront(readLineAt(cursor)) != spaceCount)
                                     {
                                         break;
@@ -98,16 +98,16 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
                                 {
                                     sb.AppendLine(readLineAt(i));
                                 }
-                                
-                                return
-                                (
-                                    isFound: true,
-                                    variableAssingmentLineIndex: cursor,
-                                    endIndex: startIndex + 4,
-                                    responseVariableName,
-                                    hasVarDecleration,
-                                    summary: sb.ToString().Trim()
-                                );
+
+                                return new MultilineProcessOutput
+                                {
+                                    isFound                     = true,
+                                    variableAssingmentLineIndex = cursor,
+                                    endIndex                    = startIndex + 4,
+                                    responseVariableName        = responseVariableName,
+                                    hasVarDecleration           = hasVarDecleration,
+                                    summary                     = sb.ToString().Trim()
+                                };
                             }
                         }
                     }

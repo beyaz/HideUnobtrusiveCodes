@@ -95,7 +95,7 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
 
                 
             var response = BOAResponseCheckProcessorMultiline.ProcessMultiLine(currentLineIndex, i => i < lineCount, getTextAtLine);
-            if (response.isFound)
+            if (response?.isFound == true)
             {
                 var sb = new StringBuilder();
 
