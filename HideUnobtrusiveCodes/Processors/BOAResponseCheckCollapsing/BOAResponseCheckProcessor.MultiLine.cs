@@ -75,31 +75,33 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
                                 // go upper
                                 while (canAccessLineAt(upCursor))
                                 {
-                                    if (lineHasMatch(upCursor,string.IsNullOrWhiteSpace))
+                                    var line = readLineAt(upCursor);
+                                    
+                                    if (string.IsNullOrWhiteSpace(line))
                                     {
                                         upCursor--;
                                         continue;
                                     }
-                                    if (lineHasMatch(upCursor, line => line?.StartsWith(padding + $"var {responseVariableName} = ")==true))
+                                    if (line.StartsWith(padding + $"var {responseVariableName} = "))
                                     {
                                         hasVarDecleration    = true;
                                         callerStartLineIndex = upCursor;
                                         break;
                                     }
 
-                                    if (lineHasMatch(upCursor, line => line.StartsWith(padding + $"{responseVariableName} = ")))
+                                    if (line.StartsWith(padding + $"{responseVariableName} = "))
                                     {
                                         callerStartLineIndex = upCursor;
                                         break;
                                     }
 
-                                    if (GetSpaceLengthInFront(readLineAt(upCursor)) == spaceCount + defaultPadding.Length)
+                                    if (GetSpaceLengthInFront(line) == spaceCount + defaultPadding.Length)
                                     {
                                         upCursor--;
                                         continue;
                                     }
 
-                                    if (GetSpaceLengthInFront(readLineAt(upCursor)) != spaceCount)
+                                    if (GetSpaceLengthInFront(line) != spaceCount)
                                     {
                                         break;
                                     }
