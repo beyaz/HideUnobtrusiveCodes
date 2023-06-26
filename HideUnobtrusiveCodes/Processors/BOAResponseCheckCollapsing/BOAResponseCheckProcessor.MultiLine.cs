@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using HideUnobtrusiveCodes.Common;
-using YamlDotNet.Serialization;
 
 namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
 {
@@ -69,43 +68,43 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
                             {
                                 var callerStartLineIndex = -1;
 
-                                var cursor = startIndex - 1;
+                                
 
                                 var hasVarDecleration = false;
 
                                 // go upper
-                                while (canAccessLineAt(cursor))
+                                while (canAccessLineAt(upCursor))
                                 {
-                                    if (lineHasMatch(cursor,string.IsNullOrWhiteSpace))
+                                    if (lineHasMatch(upCursor,string.IsNullOrWhiteSpace))
                                     {
-                                        cursor--;
+                                        upCursor--;
                                         continue;
                                     }
-                                    if (lineHasMatch(cursor, line => line?.StartsWith(padding + $"var {responseVariableName} = ")==true))
+                                    if (lineHasMatch(upCursor, line => line?.StartsWith(padding + $"var {responseVariableName} = ")==true))
                                     {
                                         hasVarDecleration    = true;
-                                        callerStartLineIndex = cursor;
+                                        callerStartLineIndex = upCursor;
                                         break;
                                     }
 
-                                    if (lineHasMatch(cursor, line => line.StartsWith(padding + $"{responseVariableName} = ")))
+                                    if (lineHasMatch(upCursor, line => line.StartsWith(padding + $"{responseVariableName} = ")))
                                     {
-                                        callerStartLineIndex = cursor;
+                                        callerStartLineIndex = upCursor;
                                         break;
                                     }
 
-                                    if (GetSpaceLengthInFront(readLineAt(cursor)) == spaceCount + defaultPadding.Length)
+                                    if (GetSpaceLengthInFront(readLineAt(upCursor)) == spaceCount + defaultPadding.Length)
                                     {
-                                        cursor--;
+                                        upCursor--;
                                         continue;
                                     }
 
-                                    if (GetSpaceLengthInFront(readLineAt(cursor)) != spaceCount)
+                                    if (GetSpaceLengthInFront(readLineAt(upCursor)) != spaceCount)
                                     {
                                         break;
                                     }
 
-                                    cursor--;
+                                    upCursor--;
                                 }
 
                                 if (callerStartLineIndex == -1)
@@ -113,31 +112,31 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
                                     return default;
                                 }
                                 
-                                // go down
-                                var cursorForDown = startIndex + 5;
+                                
+                                var downCursorTemp = downCursor + 1;
                                 
                                 // skip empty and comment lines
-                                while (canAccessLineAt(cursorForDown))
+                                while (canAccessLineAt(downCursorTemp))
                                 {
-                                    var isCommment = lineHasMatch(cursorForDown, line => line?.TrimStart().StartsWith("//") == true);
-                                    var isEmptyLine = lineHasMatch(cursorForDown, string.IsNullOrWhiteSpace);
+                                    var isCommment = lineHasMatch(downCursorTemp, line => line?.TrimStart().StartsWith("//") == true);
+                                    var isEmptyLine = lineHasMatch(downCursorTemp, string.IsNullOrWhiteSpace);
                                     if (isCommment || isEmptyLine)
                                     {
-                                        cursorForDown++;
+                                        downCursorTemp++;
                                         continue;
                                     }
                                     break;
                                 }
 
-                                int? endIndex = null;
                                 
                                 string finalValType = null;
                                 string finalValName = null;
                                 string finalValExtension = null;
+
                                 
-                                if (canAccessLineAt(cursorForDown))
+                                if (canAccessLineAt(downCursorTemp))
                                 {
-                                    var line = readLineAt(cursorForDown);
+                                    var line = readLineAt(downCursorTemp);
 
                                     var index = line.IndexOf($"= {responseVariableName}.Value", StringComparison.OrdinalIgnoreCase);
                                     if (index > 0)
@@ -157,21 +156,21 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
                                                 finalValExtension = null;
                                             }
 
-                                            endIndex = cursorForDown;
+                                            downCursor = downCursorTemp;
                                         }
                                     }
                                 }
                                 
 
                                 var sb = new StringBuilder();
-                                for (var i = cursor; i < startIndex; i++)
+                                for (var i = upCursor; i < startIndex; i++)
                                 {
                                     if (string.IsNullOrWhiteSpace(readLineAt(i)))
                                     {
                                         continue;
                                     }
                                     
-                                    if (i == cursor)
+                                    if (i == upCursor)
                                     {
                                         if (finalValType != null)
                                         {
@@ -193,26 +192,31 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
                                     }
 
                                     
-                                    
-                                    
-                                    if (i == startIndex-1)
-                                    {
-                                        if (finalValExtension != null)
-                                        {
-                                            sb.AppendLine(readLineAt(i).RemoveFromEnd(";") + finalValExtension);
-                                            continue;
-                                        }
-                                    }
-                                    
                                     sb.AppendLine(readLineAt(i).RemoveFromStart(padding));
                                     
+                                }
+                                
+                                if (finalValExtension != null)
+                                {
+                                    while (true)
+                                    {
+                                        if (sb[sb.Length-1]==';' || sb[sb.Length-1]=='\n' || sb[sb.Length-1]=='\r')
+                                        {
+                                            sb.Remove(sb.Length - 1, 1);
+                                            continue;
+                                        }    
+                                        break;
+                                    }
+                                    
+                                    
+                                    sb.Append(finalValExtension);
                                 }
 
                                 return new MultilineProcessOutput
                                 {
                                     isFound                     = true,
-                                    variableAssingmentLineIndex = cursor,
-                                    endIndex                    = cursorForDown == null ? startIndex + 4: endIndex.Value,
+                                    variableAssingmentLineIndex = upCursor,
+                                    endIndex                    = downCursor,
                                     responseVariableName        = responseVariableName,
                                     hasVarDecleration           = hasVarDecleration,
                                     summary                     = sb.ToString().Trim(),
