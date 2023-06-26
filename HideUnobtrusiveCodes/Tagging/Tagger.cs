@@ -120,7 +120,8 @@ namespace HideUnobtrusiveCodes.Tagging
             ReplaceLineWithAnotherTextProcess.ProcessReplaceLineWithAnotherText,
             ReplaceTextRangeWithAnotherTextProcess.ProcessReplaceTextRangeWithAnotherTexts,
             HideLineWhenLineStartsWithProcessor.ProcessHideLineWhenLineStartsWith,
-            BOAResponseCheckProcessor.Process
+            BOAResponseCheckProcessor.Process,
+            BOAResponseCheckProcessor.ProcessMultiLine
         };
 
         /// <summary>

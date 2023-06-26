@@ -71,6 +71,64 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
                 MoveCursor,
                 CalculateSpans);
         }
+        
+        public static void ProcessMultiLine(Scope scope)
+        {
+            //var response = bo.call();   i                 
+            //if (!response.Success)      i+1
+            //{                           i+2
+            //    return returnObject.Add(response);       -> var x = bo.call();
+            //}
+            // var x = response.Value;
+
+            var lineCount         = scope.Get(Keys.LineCount);
+            var getTextAtLine     = scope.Get(Keys.GetTextAtLine);
+            var currentLineIndex  = scope.Get(Keys.CurrentLineIndex);
+            var addTagSpan        = scope.Get(Keys.AddTagSpan);
+            var textSnapshotLines = scope.Get(Keys.TextSnapshotLines);
+
+            scope.Update(IsParseFailed, false);
+            scope.Update(Cursor, currentLineIndex);
+
+            
+           
+
+                
+            var response = BOAResponseCheckProcessorMultiline.ProcessMultiLine(currentLineIndex, i => i < lineCount, getTextAtLine);
+            if (response.isFound)
+            {
+                var sb = new StringBuilder();
+
+                if (response.hasVarDecleration)
+                {
+                    sb.Append("var ");
+                }
+
+                sb.Append(response.responseVariableName);
+
+                sb.Append(" = ");
+
+                sb.Append(getTextAtLine(response.variableAssingmentLineIndex));
+
+                for (var i = response.variableAssingmentLineIndex + 1; i < currentLineIndex; i++)
+                {
+                    sb.AppendLine("    " + getTextAtLine(i));
+                }
+                sb.Append("});");
+
+                var span = new SnapshotSpan(textSnapshotLines[currentLineIndex].Start.SkipChars(' '), textSnapshotLines[response.endIndex].End);
+                var tag  = new TagData {Text = sb.ToString(), Span = span};
+
+                addTagSpan(new TagSpan<TagData>(span, tag));
+
+                scope.Update(Keys.CurrentLineIndex, response.endIndex + 1);
+                scope.Update(Keys.IsAnyValueProcessed, true);
+
+                return;
+                
+            }
+            
+        }
         #endregion
 
         #region Methods

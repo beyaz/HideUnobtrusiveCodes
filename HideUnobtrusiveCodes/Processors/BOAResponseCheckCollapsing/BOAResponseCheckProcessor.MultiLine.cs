@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using HideUnobtrusiveCodes.Common;
 
 namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
@@ -11,18 +12,16 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
             int variableAssingmentLineIndex,
             int endIndex,
             string responseVariableName,
-            bool hasVarDecleration)
+            bool hasVarDecleration,
+            string summary)
             ProcessMultiLine(IReadOnlyList<string> lines, int startIndex)
         {
             return ProcessMultiLine(startIndex, i => i < lines.Count, i => lines[i]);
         }
 
         public static
-            (bool isFound,
-            int variableAssingmentLineIndex,
-            int endIndex,
-            string responseVariableName,
-            bool hasVarDecleration)
+            (bool isFound, int variableAssingmentLineIndex, int endIndex, string responseVariableName, 
+            bool hasVarDecleration, string summary)
             ProcessMultiLine(int startIndex, Func<int, bool> canAccessLineAt, Func<int, string> readLineAt)
         {
             var defaultPadding = "    ";
@@ -42,9 +41,9 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
 
             var padding = "".PadLeft(spaceCount, ' ');
 
-            if (successCheckLine.StartsWith(padding + "if(!") && successCheckLine.EndsWith(".Success)"))
+            if (successCheckLine.StartsWith(padding + "if (!") && successCheckLine.EndsWith(".Success)"))
             {
-                var responseVariableName = successCheckLine.Trim().RemoveFromStart("if(!").RemoveFromEnd(".Success)");
+                var responseVariableName = successCheckLine.Trim().RemoveFromStart("if (!").RemoveFromEnd(".Success)");
 
                 if (readLineAt(startIndex + 1) == padding + "{")
                 {
@@ -75,6 +74,12 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
                                         break;
                                     }
 
+                                    if (GetSpaceLengthInFront(readLineAt(cursor)) == spaceCount + defaultPadding.Length)
+                                    {
+                                        cursor--;
+                                        continue;
+                                    }
+                                    
                                     if (GetSpaceLengthInFront(readLineAt(cursor)) != spaceCount)
                                     {
                                         break;
@@ -88,13 +93,20 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
                                     return default;
                                 }
 
+                                var sb = new StringBuilder();
+                                for (var i = cursor; i < startIndex; i++)
+                                {
+                                    sb.AppendLine(readLineAt(i));
+                                }
+                                
                                 return
                                 (
                                     isFound: true,
                                     variableAssingmentLineIndex: cursor,
                                     endIndex: startIndex + 4,
                                     responseVariableName,
-                                    hasVarDecleration
+                                    hasVarDecleration,
+                                    summary: sb.ToString().Trim()
                                 );
                             }
                         }
@@ -117,7 +129,14 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
 
         static int GetSpaceLengthInFront(string line)
         {
-            return line.IndexOf(c => !char.IsWhiteSpace(c));
+            var index = line.IndexOf(c => !char.IsWhiteSpace(c));
+
+            if (index >= 0)
+            {
+                return index;
+            }
+
+            return line.Length;
         }
     }
 }
