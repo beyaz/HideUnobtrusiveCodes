@@ -95,7 +95,7 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
                                         break;
                                     }
 
-                                    if (GetSpaceLengthInFront(line) == spaceCount + defaultPadding.Length)
+                                    if (GetSpaceLengthInFront(line) >= spaceCount + defaultPadding.Length)
                                     {
                                         upCursor--;
                                         continue;
@@ -183,9 +183,10 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
                                         if (finalValName != null)
                                         {
                                             sb.Append(finalValName);
+                                            sb.Append(" = ");
                                         }
 
-                                        sb.Append(" = ");
+                                        
                                         
                                         sb.AppendLine(readLineAt(i)
                                                           .RemoveFromStart(padding + responseVariableName + " = ")
