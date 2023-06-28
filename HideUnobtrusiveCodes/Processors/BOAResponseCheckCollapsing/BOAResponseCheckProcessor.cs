@@ -94,7 +94,7 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
            
 
                 
-            var response = BOAResponseCheckProcessorMultiline.ProcessMultiLine(currentLineIndex, i => i < lineCount, getTextAtLine);
+            var response = BOAResponseCheckProcessorMultiline.ProcessMultiLine(currentLineIndex, i => i >=0 && i < lineCount, getTextAtLine);
             if (response?.isFound == true)
             {
                 var span = new SnapshotSpan(textSnapshotLines[response.variableAssingmentLineIndex].Start.SkipChars(' '), textSnapshotLines[response.endIndex].End);
