@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using HideUnobtrusiveCodes.Application;
 using HideUnobtrusiveCodes.Common;
 using HideUnobtrusiveCodes.Dataflow;
 using HideUnobtrusiveCodes.Tagging;
@@ -100,6 +101,8 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
             var response = BOAResponseCheckProcessorMultiline.ProcessMultiLine(currentLineIndex, i => i >=0 && i < lineCount, getTextAtLine);
             if (response?.isFound == true)
             {
+                App.Trace(response);
+                
                 var start = textSnapshotLines[response.variableAssingmentLineIndex].Start.Add(GetFirstCharIndexHasValue(getTextAtLine(response.variableAssingmentLineIndex)));
                 var end = textSnapshotLines[response.endIndex].End;
                 

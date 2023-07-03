@@ -1,16 +1,14 @@
 ﻿using System;
 using HideUnobtrusiveCodes.Common;
 using HideUnobtrusiveCodes.Options;
+using YamlDotNet.Serialization;
 
 namespace HideUnobtrusiveCodes.Application
 {
     static class App
     {
-        #region Static Fields
         public static readonly OptionsModel Options = SafeExecute(OptionsReader.ReadOptionsFromFile);
-        #endregion
 
-        #region Public Methods
         public static T SafeExecute<T>(Func<T> func)
         {
             try
@@ -32,6 +30,19 @@ namespace HideUnobtrusiveCodes.Application
                 MyUtil.Trace(message);
             }
         }
-        #endregion
+        
+        public static void Trace(object instance)
+        {
+            if (Options.LogEnabled)
+            {
+                if (instance == null)
+                {
+                    MyUtil.Trace("null");
+                    return;
+                }
+
+                MyUtil.Trace(new Serializer().Serialize(instance));
+            }
+        }
     }
 }
