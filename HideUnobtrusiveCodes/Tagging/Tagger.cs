@@ -9,6 +9,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
 using static HideUnobtrusiveCodes.Tagging.GlobalScopeAccess;
 using static HideUnobtrusiveCodes.Common.Mixin;
+using HideUnobtrusiveCodes.Application;
 
 namespace HideUnobtrusiveCodes.Tagging
 {
@@ -21,6 +22,7 @@ namespace HideUnobtrusiveCodes.Tagging
         public Func<int, string> ReadLineAt { get; set; }
         public int CurrentLineIndex { get; set; }
         public int TotalLength { get; set; }
+        public ITextSnapshotLine[] TextSnapshotLines { get; set; }
     }
     
     /// <summary>
@@ -146,11 +148,21 @@ namespace HideUnobtrusiveCodes.Tagging
 
             var options = GlobalScope.Options;
 
-            var snapshotLines = GetIntersectingLines(spans).ToArray();
+            ITextSnapshotLine[] snapshotLines = GetIntersectingLines(spans).ToArray();
 
 
             var textAtLineFunc = GetTextAtLineFunc(snapshotLines);
 
+            var taggerContext = new TaggerContext
+            {
+                Option            = options,
+                CanAccessLineAt   = i => i >=0 && i < snapshotLines.Length,
+                ReadLineAt        = textAtLineFunc,
+                CurrentLineIndex  = 0,
+                TotalLength       = snapshotLines.Length,
+                TextSnapshotLines = snapshotLines
+            };
+            
             var textSnapshotLines = snapshotLines.ToList();
             
             
@@ -167,20 +179,33 @@ namespace HideUnobtrusiveCodes.Tagging
             scope.SetupGet(Keys.AddTagSpan, s => returnList.Add);
             scope.SetupGet(Keys.LineCount, c => textSnapshotLines.Count);
 
-            var taggerContext = new TaggerContext
-            {
-                Option = options,
-                CanAccessLineAt = i => i >=0 && i < snapshotLines.Length,
-                ReadLineAt = textAtLineFunc,
-                CurrentLineIndex = 0,
-                TotalLength = snapshotLines.Length
-            };
+           
 
             Parse(scope);
 
             return returnList;
         }
 
+        static ITagSpan<TagData> ResponseCheck(TaggerContext taggerContext)
+        {
+            var response = BOAResponseCheckProcessorMultiline.ProcessMultiLine(taggerContext.CurrentLineIndex, taggerContext.CanAccessLineAt, taggerContext.ReadLineAt);
+            if (response?.isFound == true)
+            {
+                var start = taggerContext.TextSnapshotLines[response.variableAssingmentLineIndex].Start.Add(GetFirstCharIndexHasValue(taggerContext.ReadLineAt(response.variableAssingmentLineIndex)));
+                var end = taggerContext.TextSnapshotLines[response.endIndex].End;
+                
+                var span = new SnapshotSpan(start, end);
+                var tag  = new TagData {Text = response.summary, Span = span};
+
+                taggerContext.CurrentLineIndex = response.endIndex + 1;
+
+                return new TagSpan<TagData>(span, tag);
+
+            }
+
+            return null;
+        }
+        
         static IReadOnlyList<ITagSpan<TagData>> RunAll(TaggerContext taggerContext, params Func<TaggerContext, ITagSpan<TagData>>[] funcList)
         {
             var returnList = new List<ITagSpan<TagData>>();
