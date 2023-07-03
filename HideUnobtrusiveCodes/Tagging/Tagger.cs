@@ -12,9 +12,13 @@ using static HideUnobtrusiveCodes.Common.Mixin;
 
 namespace HideUnobtrusiveCodes.Tagging
 {
-    class TaggerContext
+    sealed class TaggerContext
     {
         public OptionsModel Option { get; set; }
+        
+        public Func<int, bool> CanAccessLineAt{ get; set; }
+        
+        public Func<int, string> ReadLineAt { get; set; }
     }
     
     /// <summary>
@@ -163,7 +167,9 @@ namespace HideUnobtrusiveCodes.Tagging
 
             var taggerContext = new TaggerContext
             {
-                Option = options
+                Option = options,
+                CanAccessLineAt = i => i >=0 && i < snapshotLines.Length,
+                ReadLineAt = textAtLineFunc
             };
 
             Parse(scope);
