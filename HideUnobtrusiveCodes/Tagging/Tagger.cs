@@ -148,7 +148,7 @@ namespace HideUnobtrusiveCodes.Tagging
 
             var options = GlobalScope.Options;
 
-            ITextSnapshotLine[] snapshotLines = GetIntersectingLines(spans).ToArray();
+            var snapshotLines = GetIntersectingLines(spans).ToArray();
 
 
             var textAtLineFunc = GetTextAtLineFunc(snapshotLines);
@@ -162,7 +162,10 @@ namespace HideUnobtrusiveCodes.Tagging
                 TotalLength       = snapshotLines.Length,
                 TextSnapshotLines = snapshotLines
             };
+
+            return RunAll(taggerContext, ResponseCheck);
             
+            /*
             var textSnapshotLines = snapshotLines.ToList();
             
             
@@ -183,7 +186,7 @@ namespace HideUnobtrusiveCodes.Tagging
 
             Parse(scope);
 
-            return returnList;
+            return returnList;*/
         }
 
         static ITagSpan<TagData> ResponseCheck(TaggerContext taggerContext)
