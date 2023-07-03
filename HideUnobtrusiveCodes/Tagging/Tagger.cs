@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using HideUnobtrusiveCodes.Dataflow;
+using HideUnobtrusiveCodes.Options;
 using HideUnobtrusiveCodes.Processors;
 using HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing;
 using Microsoft.VisualStudio.Text;
@@ -11,6 +12,11 @@ using static HideUnobtrusiveCodes.Common.Mixin;
 
 namespace HideUnobtrusiveCodes.Tagging
 {
+    class TaggerContext
+    {
+        public OptionsModel Option { get; set; }
+    }
+    
     /// <summary>
     ///     The tagger
     /// </summary>
@@ -20,6 +26,7 @@ namespace HideUnobtrusiveCodes.Tagging
         /// <summary>
         ///     The scope
         /// </summary>
+        // ReSharper disable once NotAccessedField.Local
         readonly AdornmentTaggerScope scope;
         #endregion
 
@@ -135,11 +142,13 @@ namespace HideUnobtrusiveCodes.Tagging
 
             var snapshotLines = GetIntersectingLines(spans).ToArray();
 
-            var length = snapshotLines.Length;
 
             var textAtLineFunc = GetTextAtLineFunc(snapshotLines);
 
             var textSnapshotLines = snapshotLines.ToList();
+            
+            
+            
 
             var scope = new Scope
             {
@@ -152,10 +161,18 @@ namespace HideUnobtrusiveCodes.Tagging
             scope.SetupGet(Keys.AddTagSpan, s => returnList.Add);
             scope.SetupGet(Keys.LineCount, c => textSnapshotLines.Count);
 
+            var taggerContext = new TaggerContext
+            {
+                Option = options
+            };
+
             Parse(scope);
 
             return returnList;
         }
+        
+        
+        
 
         /// <summary>
         ///     Parses the specified scope.
