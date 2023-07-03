@@ -90,8 +90,10 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
             scope.Update(IsParseFailed, false);
             scope.Update(Cursor, currentLineIndex);
 
-            
-           
+            if (IsEmptyOrCommentLine(getTextAtLine(currentLineIndex)?.Trim()))
+            {
+                return;
+            }
 
                 
             var response = BOAResponseCheckProcessorMultiline.ProcessMultiLine(currentLineIndex, i => i >=0 && i < lineCount, getTextAtLine);
