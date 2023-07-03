@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using HideUnobtrusiveCodes.Common;
 
@@ -253,6 +254,11 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
 
             if (index >= 0)
             {
+                var tabCount = line.Substring(0, index).Count(c => c == '\t');
+                if (tabCount > 0)
+                {
+                    return index - tabCount + tabCount * 4;
+                }
                 return index;
             }
 

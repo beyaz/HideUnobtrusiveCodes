@@ -191,7 +191,7 @@ namespace HideUnobtrusiveCodes.Tagging
 
         static ITagSpan<TagData> ResponseCheck(TaggerContext taggerContext)
         {
-            var response = BOAResponseCheckProcessorMultiline.ProcessMultiLine(taggerContext.CurrentLineIndex, taggerContext.CanAccessLineAt, taggerContext.ReadLineAt);
+            var response = BOAResponseCheckProcessorMultiline.ProcessMultiLine(taggerContext.CurrentLineIndex, taggerContext.CanAccessLineAt, i=>taggerContext.ReadLineAt(i)?.Replace("\t","    "));
             if (response?.isFound == true)
             {
                 var start = taggerContext.TextSnapshotLines[response.variableAssingmentLineIndex].Start.Add(GetFirstCharIndexHasValue(taggerContext.ReadLineAt(response.variableAssingmentLineIndex)));
