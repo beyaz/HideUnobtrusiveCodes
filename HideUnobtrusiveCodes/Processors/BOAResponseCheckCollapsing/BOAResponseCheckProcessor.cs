@@ -97,7 +97,8 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
                 return;
             }
 
-                
+            App.Trace(currentLineIndex.ToString());
+            
             var response = BOAResponseCheckProcessorMultiline.ProcessMultiLine(currentLineIndex, i => i >=0 && i < lineCount, getTextAtLine);
             if (response?.isFound == true)
             {
