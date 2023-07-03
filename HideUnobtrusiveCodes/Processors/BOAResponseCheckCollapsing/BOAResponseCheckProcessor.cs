@@ -6,6 +6,7 @@ using HideUnobtrusiveCodes.Tagging;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
 using static System.String;
+using static HideUnobtrusiveCodes.Common.Mixin;
 
 namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
 {
@@ -99,7 +100,10 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
             var response = BOAResponseCheckProcessorMultiline.ProcessMultiLine(currentLineIndex, i => i >=0 && i < lineCount, getTextAtLine);
             if (response?.isFound == true)
             {
-                var span = new SnapshotSpan(textSnapshotLines[response.variableAssingmentLineIndex].Start.SkipChars(' '), textSnapshotLines[response.endIndex].End);
+                var start = textSnapshotLines[response.variableAssingmentLineIndex].Start.Add(GetFirstCharIndexHasValue(getTextAtLine(response.variableAssingmentLineIndex)));
+                var end = textSnapshotLines[response.endIndex].End;
+                
+                var span = new SnapshotSpan(start, end);
                 var tag  = new TagData {Text = response.summary, Span = span};
 
                 addTagSpan(new TagSpan<TagData>(span, tag));

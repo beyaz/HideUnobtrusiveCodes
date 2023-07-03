@@ -249,7 +249,7 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
 
         static int GetSpaceLengthInFront(string line)
         {
-            var index = line.IndexOf(c => !char.IsWhiteSpace(c));
+            var index = line.IndexOf(c => !char.IsLetterOrDigit(c));
 
             if (index >= 0)
             {
