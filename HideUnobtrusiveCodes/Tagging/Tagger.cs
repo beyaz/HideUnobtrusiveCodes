@@ -19,6 +19,8 @@ namespace HideUnobtrusiveCodes.Tagging
         public Func<int, bool> CanAccessLineAt{ get; set; }
         
         public Func<int, string> ReadLineAt { get; set; }
+        public int CurrentLineIndex { get; set; }
+        public int TotalLength { get; set; }
     }
     
     /// <summary>
@@ -169,15 +171,49 @@ namespace HideUnobtrusiveCodes.Tagging
             {
                 Option = options,
                 CanAccessLineAt = i => i >=0 && i < snapshotLines.Length,
-                ReadLineAt = textAtLineFunc
+                ReadLineAt = textAtLineFunc,
+                CurrentLineIndex = 0,
+                TotalLength = snapshotLines.Length
             };
 
             Parse(scope);
 
             return returnList;
         }
-        
-        
+
+        static IReadOnlyList<ITagSpan<TagData>> RunAll(TaggerContext taggerContext, params Func<TaggerContext, ITagSpan<TagData>>[] funcList)
+        {
+            var returnList = new List<ITagSpan<TagData>>();
+            
+            var length = taggerContext.TotalLength;
+
+            for (var i = 0; i < length;)
+            {
+                taggerContext.CurrentLineIndex = i;
+                
+                foreach (var func in funcList)
+                {
+                    var tagSpan = func(taggerContext);
+                    if (tagSpan != null)
+                    {
+                        returnList.Add(tagSpan);
+                        i = taggerContext.CurrentLineIndex;
+                        break;
+                    }
+                }
+
+                if (taggerContext.CurrentLineIndex == i)
+                {
+                    i = taggerContext.CurrentLineIndex + 1;
+                }
+                else
+                {
+                    i = taggerContext.CurrentLineIndex;
+                }
+            }
+
+            return returnList;
+        }
         
 
         /// <summary>
