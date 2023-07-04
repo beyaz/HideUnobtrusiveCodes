@@ -163,7 +163,7 @@ namespace HideUnobtrusiveCodes.Tagging
                 TextSnapshotLines = snapshotLines
             };
 
-            return RunAll(taggerContext, ResponseCheck);
+            return RunAll(taggerContext, ReplaceIgnoreLinesWithCommentIcon, ResponseCheck);
             
             /*
             var textSnapshotLines = snapshotLines.ToList();
@@ -208,6 +208,51 @@ namespace HideUnobtrusiveCodes.Tagging
 
             return null;
         }
+        
+        static ITagSpan<TagData> ReplaceIgnoreLinesWithCommentIcon(TaggerContext taggerContext)
+        {
+            var currentLineIndex = taggerContext.CurrentLineIndex;
+
+            var canAccessLineAt = taggerContext.CanAccessLineAt;
+
+            string readLineAt(int i)
+            {
+                return taggerContext.ReadLineAt(i)?.Replace("\t", "    ");
+            }
+
+            bool isCommentLine(string line)
+            {
+                return CanIgnoreLine(line, taggerContext.Option.ReplaceWithCommentIconWhenLineStartsWith);
+            }
+
+            var response = CommentProcessor.Process(currentLineIndex, canAccessLineAt, readLineAt, isCommentLine);
+            if (response == default)
+            {
+                return default;
+            }
+
+            var tagSpan = CommentTagger.ConvertCommentToTagSpan(taggerContext, response.startLineIndex, response.endLineIndex);
+
+            taggerContext.CurrentLineIndex = response.endLineIndex + 1;
+
+            return tagSpan;
+            
+            
+        }
+        
+        static bool CanIgnoreLine(string line, IReadOnlyList<string> ignorePrefixList)
+        {
+            foreach (var prefix in ignorePrefixList)
+            {
+                if (line?.TrimStart().StartsWith(prefix,StringComparison.OrdinalIgnoreCase)== true)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        
         
         static IReadOnlyList<ITagSpan<TagData>> RunAll(TaggerContext taggerContext, params Func<TaggerContext, ITagSpan<TagData>>[] funcList)
         {
