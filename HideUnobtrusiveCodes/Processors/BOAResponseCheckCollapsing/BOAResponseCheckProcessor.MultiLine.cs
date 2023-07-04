@@ -161,6 +161,22 @@ namespace HideUnobtrusiveCodes.Processors.BOAResponseCheckCollapsing
 
                                             downCursor = downCursorTemp;
                                         }
+
+                                        if (firstSpaceIndex == -1)
+                                        {
+                                            if (result.Length > 0)
+                                            {
+                                                finalValName = result;
+                                                
+                                                finalValExtension = line.Substring(index + $"= {responseVariableName}.Value".Length);
+                                                if (finalValExtension==";")
+                                                {
+                                                    finalValExtension = null;
+                                                }
+
+                                                downCursor = downCursorTemp;
+                                            }
+                                        }
                                     }
                                 }
                                 
