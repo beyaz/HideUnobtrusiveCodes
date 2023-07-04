@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 using HideUnobtrusiveCodes.Tagging;
 using Microsoft.VisualStudio.Text.Classification;
@@ -48,6 +49,7 @@ namespace HideUnobtrusiveCodes.Common
                 textBlock.FontStretch = typeface.Stretch;
                 textBlock.FontWeight  = typeface.Weight;
                 textBlock.FontSize    = fontSize;
+                textBlock.FontStyle   = FontStyles.Italic;
             }
         }
 
